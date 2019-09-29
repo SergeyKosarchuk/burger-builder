@@ -25,11 +25,15 @@ const Burger = styled.div`
     }
 `;
 
-export default function burger() {
-    return <Burger>
-        <BurgerIngredient type={'bread-top'}/>
-        <BurgerIngredient type={'cheese'}/>
-        <BurgerIngredient type={'meat'}/>
-        <BurgerIngredient type={'bread-bottom'}/>
-    </Burger>
+export default function burger({ingredients}) {
+    let burger_ingredients = [<BurgerIngredient type='bread-top' key='bread-top-1'/>];
+
+    for (let [name, count] of Object.entries(ingredients)){
+        for (let i = 0; i < count; i++) {
+            burger_ingredients.push(<BurgerIngredient type={name} key={name + i}/>);
+        }
+    }
+    burger_ingredients.push(<BurgerIngredient type='bread-bottom' key='bread-bottom-1'/>);
+
+    return <Burger>{burger_ingredients}</Burger>
 }
