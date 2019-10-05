@@ -32,6 +32,11 @@ const BuildControlButtonLess = styled(BuildControlButton)`
         background-color: #DAA972;
         color: white;
     }
+    :disabled {
+        background-color: #AC9980;
+        color: #ccc;
+        cursor: not-allowed;
+    }
 `;
 
 const BuildControlButtonMore = styled(BuildControlButton)`
@@ -40,14 +45,19 @@ const BuildControlButtonMore = styled(BuildControlButton)`
     :hover {
         background-color: #DAA972;
         color: white;
+    };
+    :disabled {
+        background-color: #AC9980;
+        color: #ccc;
+        cursor: not-allowed;
     }
 `;
 
-export default function buildControl ({label, added, removed}) {
+export default function buildControl ({label, added, removed, disabled}) {
     return (
         <StyledBuildControl>
             <BuildControlLabel>{label}</BuildControlLabel>
-            <BuildControlButtonLess onClick={removed}>Less</BuildControlButtonLess>
+            <BuildControlButtonLess onClick={removed} disabled={disabled}>Less</BuildControlButtonLess>
             <BuildControlButtonMore onClick={added}>More</BuildControlButtonMore>
         </StyledBuildControl>);
 }

@@ -21,13 +21,16 @@ const controls = [
     { label: 'Meat', type: 'meat' },
 ];
 
-export default function buildControls ({ingredientAdded, ingredientRemoved}) {
+export default function buildControls ({ingredientAdded, ingredientRemoved, disabled, price}) {
     return (
         <BuildControls>
+            <p>Current price: <strong>{price.toFixed(2)}</strong></p>
             {controls.map((control) => <BuildControl key={control.type}
                                                      label={control.label}
                                                      added={() => ingredientAdded(control.type)}
-                                                     removed={() => ingredientRemoved(control.type)}/>)}
+                                                     removed={() => ingredientRemoved(control.type)}
+                                                     disabled={disabled.includes(control.type)}
+            />)}
         </BuildControls>
     );
 }

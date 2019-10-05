@@ -40,7 +40,7 @@ class BurgerBuilder extends React.Component{
 
                 prevSate.ingredients[type] -= 1;
 
-                if ( new_price > MIN_PRICE ) {
+                if ( new_price >= MIN_PRICE ) {
                     prevSate.totalPrice = new_price;
                 }
             }
@@ -49,12 +49,16 @@ class BurgerBuilder extends React.Component{
     };
 
     render(){
+        const disabledIngredients = Object.keys(this.state.ingredients).filter((ing) => this.state.ingredients[ing] <= 0);
+
         return (
             <>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls ingredientAdded={this.addIngredientHandler}
-                               ingredientRemoved={this.removeIngredientHandler}/>
-                <p>{this.state.totalPrice}</p>
+                               ingredientRemoved={this.removeIngredientHandler}
+                               disabled={disabledIngredients}
+                               price={this.state.totalPrice}
+                />
             </>
         )
     }
