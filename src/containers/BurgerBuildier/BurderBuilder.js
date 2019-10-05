@@ -50,6 +50,8 @@ class BurgerBuilder extends React.Component{
 
     render(){
         const disabledIngredients = Object.keys(this.state.ingredients).filter((ing) => this.state.ingredients[ing] <= 0);
+        const canCompleteOrder = !!Object.values(this.state.ingredients).reduce(
+            (previousValue, currentItem) => previousValue + currentItem);
 
         return (
             <>
@@ -58,6 +60,7 @@ class BurgerBuilder extends React.Component{
                                ingredientRemoved={this.removeIngredientHandler}
                                disabled={disabledIngredients}
                                price={this.state.totalPrice}
+                               canCompleteOrder={canCompleteOrder}
                 />
             </>
         )

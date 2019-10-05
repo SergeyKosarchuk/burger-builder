@@ -51,6 +51,21 @@ const BuildControlButtonMore = styled(BuildControlButton)`
         color: #ccc;
         cursor: not-allowed;
     }
+    :not(:disabled) {
+        animation: enable 0.3s linear;
+    }
+    
+    @keyframes enable {
+    0% {
+        transform: scale(1);
+    }
+    60% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
 `;
 
 export default function buildControl ({label, added, removed, disabled}) {
