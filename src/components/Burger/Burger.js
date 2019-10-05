@@ -33,7 +33,9 @@ export default function burger({ingredients}) {
             burger_ingredients.push(<BurgerIngredient type={name} key={name + i}/>);
         }
     }
-    burger_ingredients.push(<BurgerIngredient type='bread-bottom' key='bread-bottom-1'/>);
 
-    return <Burger>{burger_ingredients}</Burger>
+    burger_ingredients.push(<BurgerIngredient type='bread-bottom' key='bread-bottom-1'/>);
+    const msg = Object.values(ingredients).reduce((total, current) => total + current) ? '' : 'Add ingredients';
+
+    return <Burger>{burger_ingredients}<p>{msg}</p></Burger>
 }
