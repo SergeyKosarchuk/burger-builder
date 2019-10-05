@@ -22,6 +22,7 @@ class BurgerBuilder extends React.Component{
     state = {
         ingredients: Object.assign({}, STARTING_INGREDIENTS),
         totalPrice: MIN_PRICE,
+        showOrderConfirm: false,
     };
 
     addIngredientHandler = (type) => {
@@ -50,6 +51,10 @@ class BurgerBuilder extends React.Component{
         })
     };
 
+    orderCompleteHandler = () => {
+        this.setState({showOrderConfirm: true})
+    };
+
     render(){
         const disabledIngredients = Object.keys(this.state.ingredients).filter((ing) => this.state.ingredients[ing] <= 0);
         const canCompleteOrder = !!Object.values(this.state.ingredients).reduce(
@@ -57,13 +62,14 @@ class BurgerBuilder extends React.Component{
 
         return (
             <>
-                <Modal><OrderSummary ingredients={this.state.ingredients}/></Modal>
+                {this.state.showOrderConfirm ? <Modal>{<OrderSummary ingredients={this.state.ingredients}/>}</Modal> : ''}
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls ingredientAdded={this.addIngredientHandler}
                                ingredientRemoved={this.removeIngredientHandler}
                                disabled={disabledIngredients}
                                price={this.state.totalPrice}
                                canCompleteOrder={canCompleteOrder}
+                               orderCompleteHandler={this.orderCompleteHandler}
                 />
             </>
         )

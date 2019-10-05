@@ -45,17 +45,17 @@ const controls = [
     { label: 'Meat', type: 'meat' },
 ];
 
-export default function buildControls ({ingredientAdded, ingredientRemoved, disabled, price, canCompleteOrder}) {
+export default function buildControls (props) {
     return (
         <BuildControls>
-            <p>Current price: <strong>{price.toFixed(2)}</strong></p>
+            <p>Current price: <strong>{props.price.toFixed(2)}</strong></p>
             {controls.map((control) => <BuildControl key={control.type}
                                                      label={control.label}
-                                                     added={() => ingredientAdded(control.type)}
-                                                     removed={() => ingredientRemoved(control.type)}
-                                                     disabled={disabled.includes(control.type)}
+                                                     added={() => props.ingredientAdded(control.type)}
+                                                     removed={() => props.ingredientRemoved(control.type)}
+                                                     disabled={props.disabled.includes(control.type)}
             />)}
-            <OrderButton disabled={!canCompleteOrder}>ORDER NOW</OrderButton>
+            <OrderButton disabled={!props.canCompleteOrder} onClick={props.orderCompleteHandler}>ORDER NOW</OrderButton>
         </BuildControls>
     );
 }
