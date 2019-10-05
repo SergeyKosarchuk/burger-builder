@@ -62,7 +62,7 @@ class BurgerBuilder extends React.Component{
 
         return (
             <>
-                {this.state.showOrderConfirm ? <Modal>{<OrderSummary ingredients={this.state.ingredients}/>}</Modal> : ''}
+                <Modal show={this.state.showOrderConfirm}><OrderSummary ingredients={this.state.ingredients}/></Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls ingredientAdded={this.addIngredientHandler}
                                ingredientRemoved={this.removeIngredientHandler}

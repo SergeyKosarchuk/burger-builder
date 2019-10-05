@@ -13,6 +13,8 @@ const Modal = styled.div`
     top: 30%;
     box-sizing: border-box;
     transition: all 0.3s ease-out;
+    transform: ${props => props.show ? 'translateY(0)' : 'translateY(-100vh)'};
+    opacity: ${props => props.show ? '1' : '0'}};
 
     @media (min-width: 600px) {
         width: 500px;
@@ -22,6 +24,6 @@ const Modal = styled.div`
 
 export default function modal(props) {
     return (
-        <Modal>{props.children}</Modal>
+        <Modal show={props.show}>{props.children}</Modal>
     )
 }
