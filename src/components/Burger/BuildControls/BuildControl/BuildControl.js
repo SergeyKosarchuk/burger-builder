@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const StyledBuildControl = styled.div`
     display: flex;
-    justify-content; space-between;
+    justify-content: space-between;
     align-items: center;
     margin: 5px 0;
 `;
@@ -54,7 +54,7 @@ const BuildControlButtonMore = styled(BuildControlButton)`
     :not(:disabled) {
         animation: enable 0.3s linear;
     }
-    
+
     @keyframes enable {
     0% {
         transform: scale(1);
