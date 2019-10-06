@@ -48,7 +48,7 @@ const controls = [
 export default function buildControls (props) {
     return (
         <BuildControls>
-            <p>Current price: <strong>{props.price.toFixed(2)}</strong></p>
+            <p>Current price: <strong>{props.price}</strong></p>
             {controls.map((control) => <BuildControl key={control.type}
                                                      label={control.label}
                                                      added={() => props.ingredientAdded(control.type)}

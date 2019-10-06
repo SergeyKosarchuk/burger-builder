@@ -79,6 +79,7 @@ class BurgerBuilder extends React.Component{
             <>
                 <Modal show={showOrderConfirm} clicked={this.orderCancelHandler}>
                     <OrderSummary ingredients={ingredients}
+                                  totalPrice={totalPrice.toFixed(2)}
                                   acceptClicked={this.orderAcceptClickedHandler}
                                   cancelClicked={this.orderCancelClickedHandler}/>
                 </Modal>
@@ -86,7 +87,7 @@ class BurgerBuilder extends React.Component{
                 <BuildControls ingredientAdded={this.addIngredientHandler}
                                ingredientRemoved={this.removeIngredientHandler}
                                disabled={disabledIngredients}
-                               price={totalPrice}
+                               price={totalPrice.toFixed(2)}
                                canCompleteOrder={canCompleteOrder}
                                orderCompleteHandler={this.orderCompleteHandler}
                 />
