@@ -1,14 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
+import Toolbar from '../UI/Navigation/Toolbar/Toolbar';
 
 const Main = styled.main`
-    margin-top: 16px;
+    margin-top: 72px;
 `;
 
 export default function Layout( props ){
     return (
         <>
-            <div>Toolbar, Sidebar, Backdrop</div>
+            <Toolbar />
             <Main>
                 {props.children}
             </Main>
