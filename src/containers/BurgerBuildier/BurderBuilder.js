@@ -59,19 +59,34 @@ class BurgerBuilder extends React.Component{
         this.setState({showOrderConfirm: false});
     }
 
+    orderAcceptClickedHandler = () => {
+        alert('Order accepted!')
+        this.setState({showOrderConfirm: false})
+    }
+
+    orderCancelClickedHandler = () => {
+        console.log('Order canceled!')
+        this.setState({showOrderConfirm: false})
+    }
+
     render(){
-        const disabledIngredients = Object.keys(this.state.ingredients).filter((ing) => this.state.ingredients[ing] <= 0);
-        const canCompleteOrder = !!Object.values(this.state.ingredients).reduce(
+        const { ingredients, totalPrice, showOrderConfirm } = this.state;
+        const disabledIngredients = Object.keys(ingredients).filter((ing) => ingredients[ing] <= 0);
+        const canCompleteOrder = !!Object.values(ingredients).reduce(
             (previousValue, currentItem) => previousValue + currentItem);
 
         return (
             <>
-                <Modal show={this.state.showOrderConfirm} clicked={this.orderCancelHandler}><OrderSummary ingredients={this.state.ingredients}/></Modal>
-                <Burger ingredients={this.state.ingredients}/>
+                <Modal show={showOrderConfirm} clicked={this.orderCancelHandler}>
+                    <OrderSummary ingredients={ingredients}
+                                  acceptClicked={this.orderAcceptClickedHandler}
+                                  cancelClicked={this.orderCancelClickedHandler}/>
+                </Modal>
+                <Burger ingredients={ingredients}/>
                 <BuildControls ingredientAdded={this.addIngredientHandler}
                                ingredientRemoved={this.removeIngredientHandler}
                                disabled={disabledIngredients}
-                               price={this.state.totalPrice}
+                               price={totalPrice}
                                canCompleteOrder={canCompleteOrder}
                                orderCompleteHandler={this.orderCompleteHandler}
                 />
