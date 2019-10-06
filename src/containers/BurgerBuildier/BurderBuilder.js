@@ -55,7 +55,7 @@ class BurgerBuilder extends React.Component{
         this.setState({showOrderConfirm: true})
     };
 
-    modalClickedHandler = () => {
+    orderCancelHandler = () => {
         this.setState({showOrderConfirm: false});
     }
 
@@ -66,7 +66,7 @@ class BurgerBuilder extends React.Component{
 
         return (
             <>
-                <Modal show={this.state.showOrderConfirm} clicked={this.modalClickedHandler}><OrderSummary ingredients={this.state.ingredients}/></Modal>
+                <Modal show={this.state.showOrderConfirm} clicked={this.orderCancelHandler}><OrderSummary ingredients={this.state.ingredients}/></Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls ingredientAdded={this.addIngredientHandler}
                                ingredientRemoved={this.removeIngredientHandler}

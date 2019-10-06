@@ -23,11 +23,11 @@ const Modal = styled.div`
     }
 `;
 
-export default function modal(props) {
-    return (
-        <>
-            <Modal show={props.show}>{props.children}</Modal>
-            <Backdrop show={props.show} clicked={props.clicked}></Backdrop>
-        </>
-    )
-}
+const modal = ({ show, clicked, children, ...rest }) => (
+    <>
+        <Modal show={show}>{children}</Modal>
+        <Backdrop show={show} clicked={clicked}></Backdrop>
+    </>
+)
+
+export default modal
