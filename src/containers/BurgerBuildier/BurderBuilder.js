@@ -55,6 +55,10 @@ class BurgerBuilder extends React.Component{
         this.setState({showOrderConfirm: true})
     };
 
+    modalClickedHandler = () => {
+        this.setState({showOrderConfirm: false});
+    }
+
     render(){
         const disabledIngredients = Object.keys(this.state.ingredients).filter((ing) => this.state.ingredients[ing] <= 0);
         const canCompleteOrder = !!Object.values(this.state.ingredients).reduce(
@@ -62,7 +66,7 @@ class BurgerBuilder extends React.Component{
 
         return (
             <>
-                <Modal show={this.state.showOrderConfirm}><OrderSummary ingredients={this.state.ingredients}/></Modal>
+                <Modal show={this.state.showOrderConfirm} clicked={this.modalClickedHandler}><OrderSummary ingredients={this.state.ingredients}/></Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls ingredientAdded={this.addIngredientHandler}
                                ingredientRemoved={this.removeIngredientHandler}
