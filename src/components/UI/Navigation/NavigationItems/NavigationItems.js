@@ -11,7 +11,6 @@ const NavigationItems = styled.ul`
     height: 100%;
 `;
 
-
 export default function navigationItems (props) {
     return (
     <NavigationItems>

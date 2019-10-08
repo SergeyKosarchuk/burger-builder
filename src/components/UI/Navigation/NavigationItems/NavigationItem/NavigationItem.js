@@ -15,7 +15,6 @@ const A = styled.a`
     text-decoration: none;
     height: 100%;
     padding: 16px 10px;
-    border-bottom: 4px solid transparent;
     box-sizing: border-box;
     display: block;
     color: white;
@@ -27,7 +26,6 @@ const A = styled.a`
         border-bottom: 4px solid #40A4C8;
     }
 `;
-
 
 export default function navigationItem ({children, link, active}) {
     return <NavigationItem><A active={active} href={link}>{children}</A></NavigationItem>
