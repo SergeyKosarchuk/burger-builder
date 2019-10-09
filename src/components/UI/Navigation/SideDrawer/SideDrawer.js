@@ -30,7 +30,9 @@ export default function sideDrawer (props) {
     return (
         <SideDrawer isOpen>
             <LogoWrapper><Logo/></LogoWrapper>
-            <NavigationItems></NavigationItems>
+            <nav>
+                <NavigationItems />
+            </nav>
         </SideDrawer>
     );
 }
