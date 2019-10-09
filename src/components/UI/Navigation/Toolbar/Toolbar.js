@@ -22,7 +22,7 @@ export default function  toolbar (props) {
     return (
         <Toolbar>
             <div>MENU</div>
-            <Logo height={123}/>
+            <Logo/>
             <NavigationItems>...</NavigationItems>
         </Toolbar>
     );

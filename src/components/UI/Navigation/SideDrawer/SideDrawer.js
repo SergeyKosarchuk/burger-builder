@@ -22,10 +22,14 @@ const SideDrawer = styled.div`
     }
 `;
 
+const LogoWrapper = styled.div`
+    height: 18%;
+`;
+
 export default function sideDrawer (props) {
     return (
         <SideDrawer isOpen>
-            <Logo heightValue={'11'}/>
+            <LogoWrapper><Logo/></LogoWrapper>
             <NavigationItems></NavigationItems>
         </SideDrawer>
     );
