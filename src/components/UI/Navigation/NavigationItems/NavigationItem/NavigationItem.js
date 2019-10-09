@@ -17,7 +17,6 @@ const A = styled.a`
     padding: 16px 10px;
     box-sizing: border-box;
     display: block;
-    color: white;
     background-color: ${(props) => props.active ? '#8F5C2C' : ''};
     border-bottom: ${(props) => props.active ? '4px solid #40A4C8' : ''};
 
