@@ -23,7 +23,8 @@ const SideDrawer = styled.div`
 `;
 
 const LogoWrapper = styled.div`
-    height: 18%;
+    height: 11%;
+    margin-bottom: 32px;
 `;
 
 export default function sideDrawer (props) {

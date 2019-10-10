@@ -18,12 +18,20 @@ const Toolbar = styled.header`
     z-index:  90;
 `;
 
+const Nav = styled.nav`
+    @media (max-width: 499px) {
+        display: none;
+    }
+`;
+
 export default function  toolbar (props) {
     return (
         <Toolbar>
             <div>MENU</div>
             <Logo/>
-            <NavigationItems>...</NavigationItems>
+            <Nav>
+                <NavigationItems />
+            </Nav>
         </Toolbar>
     );
 }
