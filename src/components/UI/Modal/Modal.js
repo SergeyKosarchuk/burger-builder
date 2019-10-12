@@ -2,7 +2,7 @@ import React from 'react';
 import styled from "styled-components";
 import Backdrop from '../Backdrop/Backdrop';
 
-const Modal = styled.div`
+const StyledModal = styled.div`
     position: fixed;
     z-index: 500;
     background-color: white;
@@ -23,11 +23,19 @@ const Modal = styled.div`
     }
 `;
 
-const modal = ({ show, clicked, children, ...rest }) => (
-    <>
-        <Modal show={show}>{children}</Modal>
-        <Backdrop show={show} clicked={clicked}></Backdrop>
-    </>
-)
+export default class Modal extends React.Component {
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.show !== this.props.show
+    }
 
-export default modal
+    render() {
+        const { show, clicked, children } = this.props
+
+        return (
+            <>
+                <StyledModal show={show}>{children}</StyledModal>
+                <Backdrop show={show} clicked={clicked}></Backdrop>
+            </>
+        );
+    }
+}
