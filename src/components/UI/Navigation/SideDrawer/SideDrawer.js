@@ -2,6 +2,7 @@ import React from 'react';
 import Logo from '../../../Logo/Logo';
 import NavigationItems from '../NavigationItems/NavigationItems';
 import styled from 'styled-components';
+import Backdrop from '../../Backdrop/Backdrop'
 
 const SideDrawer = styled.div`
     position: fixed;
@@ -27,13 +28,16 @@ const LogoWrapper = styled.div`
     margin-bottom: 32px;
 `;
 
-export default function sideDrawer (props) {
+export default function sideDrawer ({isOpen, closed}) {
     return (
-        <SideDrawer isOpen>
+        <>
+            <Backdrop show={isOpen} clicked={closed}/>
+            <SideDrawer isOpen={isOpen}>
             <LogoWrapper><Logo/></LogoWrapper>
             <nav>
                 <NavigationItems />
             </nav>
-        </SideDrawer>
+            </SideDrawer>
+        </>
     );
 }

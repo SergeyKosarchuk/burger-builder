@@ -7,14 +7,24 @@ const Main = styled.main`
     margin-top: 72px;
 `;
 
-export default function Layout( props ){
-    return (
-        <>
-            <Toolbar />
-            <SideDrawer />
-            <Main>
-                {props.children}
-            </Main>
-        </>
-    )
+export default class Layout extends React.Component{
+    state = {
+        isSideDrawerOpen: true
+    }
+
+    sideDrawerClosedHandler = () => {
+        this.setState({isSideDrawerOpen: false})
+    }
+
+    render(){
+        return (
+            <>
+                <Toolbar />
+                <SideDrawer closed={this.sideDrawerClosedHandler} isOpen={this.state.isSideDrawerOpen}/>
+                <Main>
+                    {this.props.children}
+                </Main>
+            </>
+        )
+    }
 }
