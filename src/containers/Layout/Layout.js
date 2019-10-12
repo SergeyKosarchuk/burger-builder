@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Toolbar from '../UI/Navigation/Toolbar/Toolbar';
-import SideDrawer from '../UI/Navigation/SideDrawer/SideDrawer';
+import Toolbar from '../../components/UI/Navigation/Toolbar/Toolbar';
+import SideDrawer from '../../components/UI/Navigation/SideDrawer/SideDrawer';
 
 const Main = styled.main`
     margin-top: 72px;
