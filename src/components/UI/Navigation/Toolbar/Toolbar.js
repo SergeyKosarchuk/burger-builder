@@ -28,7 +28,7 @@ const Nav = styled.nav`
 export default function toolbar ({ menuOpened }) {
     return (
         <Toolbar>
-            <SideDrawerToogle clicked={menuOpened}>Menu</SideDrawerToogle>
+            <SideDrawerToogle clicked={menuOpened} />
             <Logo/>
             <Nav>
                 <NavigationItems />
