@@ -9,17 +9,23 @@ const Main = styled.main`
 
 export default class Layout extends React.Component{
     state = {
-        isSideDrawerOpen: true
+        isSideDrawerOpen: false
     }
 
     sideDrawerClosedHandler = () => {
         this.setState({isSideDrawerOpen: false})
     }
 
+    sideDrawOpenHandler = () => {
+        this.setState((prevState) => {
+            return { isSideDrawerOpen: !prevState.isSideDrawerOpen }
+        })
+    }
+
     render(){
         return (
             <>
-                <Toolbar />
+                <Toolbar menuOpened={this.sideDrawOpenHandler}/>
                 <SideDrawer closed={this.sideDrawerClosedHandler} isOpen={this.state.isSideDrawerOpen}/>
                 <Main>
                     {this.props.children}

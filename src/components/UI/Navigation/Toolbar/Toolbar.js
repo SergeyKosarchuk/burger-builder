@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Logo from '../../../Logo/Logo';
 import NavigationItems from '../NavigationItems/NavigationItems';
+import SideDrawerToogle from '../SideDrawer/SideDrawerToggle/SideDrawerToggle';
 
 const Toolbar = styled.header`
     height: 56px;
@@ -24,10 +25,10 @@ const Nav = styled.nav`
     }
 `;
 
-export default function  toolbar (props) {
+export default function toolbar ({ menuOpened }) {
     return (
         <Toolbar>
-            <div>MENU</div>
+            <SideDrawerToogle clicked={menuOpened}>Menu</SideDrawerToogle>
             <Logo/>
             <Nav>
                 <NavigationItems />
