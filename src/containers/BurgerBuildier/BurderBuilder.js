@@ -1,4 +1,6 @@
 import React from 'react';
+import axios from '../../axios-orders';
+
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/Modal";
@@ -60,8 +62,27 @@ class BurgerBuilder extends React.Component{
     }
 
     orderAcceptClickedHandler = () => {
-        alert('Order accepted!')
         this.setState({showOrderConfirm: false})
+        const order = {
+            ingredients: this.state.ingredients,
+            price: this.state.totalPrice,
+            customer: {
+                name: 'Sergey',
+                address: {
+                    street: 'Test street',
+                    zipCode: '41351',
+                    country: 'Russia',
+                },
+                email: 'test@test.ru'
+            },
+            deliveryMethod: 'plane'
+        }
+        axios.post('orders/.json', order)
+            .then((result) => {
+                console.info(result);
+            }).catch((err) => {
+                console.info(err);
+            });
     }
 
     orderCancelClickedHandler = () => {
