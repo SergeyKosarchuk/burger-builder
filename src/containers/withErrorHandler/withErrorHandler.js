@@ -8,16 +8,20 @@ export default function withErrorHandler ( WrappedComponent, axios ) {
             error: null
         }
 
-        constructor(props) {
-            super(props)
-            axios.interceptors.request.use(req => {
+        componentDidMount () {
+            this.requestInterceptor = axios.interceptors.request.use(req => {
                 this.setState({error: null})
                 return req;
             })
-            axios.interceptors.response.use(null, error => {
+            this.responseInterceptor = axios.interceptors.response.use(null, error => {
                 this.setState({error: error})
                 return error;
             });
+        }
+
+        componentWillUnmount () {
+            axios.interceptors.eject(this.requestInterceptor)
+            axios.interceptors.eject(this.responseInterceptor)
         }
 
         errorConfirmedHandler = () => {
