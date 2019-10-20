@@ -8,51 +8,50 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spiner from '../../components/UI/Spinner/Spiner';
 import withErrorHandler from '../withErrorHandler/withErrorHandler';
 
-const MIN_PRICE = 4;
-const INGREDIENT_PRICES = {
-    salad: 0.5,
-    bacon: 2,
-    cheese: 2.5,
-    meat: 4
-};
-const STARTING_INGREDIENTS = {
-    salad: 1,
-    bacon: 1,
-    cheese: 2,
-    meat: 2
-};
 
 class BurgerBuilder extends React.Component{
     state = {
-        ingredients: Object.assign({}, STARTING_INGREDIENTS),
-        totalPrice: MIN_PRICE,
+        minPrice: null,
+        ingredients: {},
+        startIngredients: null,
+        totalPrice: null,
         showOrderConfirm: false,
         isLoading: false,
+        ingredientPrices: null,
     };
 
-    addIngredientHandler = (type) => {
-        this.setState((prevSate) => {
-            prevSate.ingredients[type] += 1;
+    componentDidMount () {
+        axios.get('start_ingredients/.json')
+            .then(result => this.setState({ingredients: Object.assign({}, result.data), startIngredients: Object.assign({}, result.data)}))
+        axios.get('min_price/.json')
+            .then(result => this.setState({minPrice: result.data, totalPrice: result.data}))
+        axios.get('ingredient_prices/.json')
+            .then(result => this.setState({ingredientPrices: Object.assign(result.data)}))
+    }
 
-            if ( prevSate.ingredients[type] > STARTING_INGREDIENTS[type] ){
-                prevSate.totalPrice += INGREDIENT_PRICES[type];
+    addIngredientHandler = (type) => {
+        this.setState((prevState) => {
+            prevState.ingredients[type] += 1;
+
+            if ( prevState.ingredients[type] > prevState.startIngredients[type] ){
+                prevState.totalPrice += prevState.ingredientPrices[type];
             }
-            return prevSate;
+            return prevState;
         })
     };
 
     removeIngredientHandler = (type) => {
-        this.setState((prevSate) => {
-            if ( prevSate.ingredients[type] > 0 ) {
-                const new_price = prevSate.totalPrice - INGREDIENT_PRICES[type];
+        this.setState((prevState) => {
+            if ( prevState.ingredients[type] > 0 ) {
+                const newPrice = prevState.totalPrice - prevState.ingredientPrices[type];
 
-                prevSate.ingredients[type] -= 1;
+                prevState.ingredients[type] -= 1;
 
-                if ( new_price >= MIN_PRICE ) {
-                    prevSate.totalPrice = new_price;
+                if ( newPrice >= this.state.minPrice ) {
+                    prevState.totalPrice = newPrice;
                 }
             }
-            return prevSate;
+            return prevState;
         })
     };
 
@@ -85,13 +84,11 @@ class BurgerBuilder extends React.Component{
             .then((result) => {
                 this.setState({isLoading: false, showOrderConfirm: false})
             }).catch((err) => {
-                this.setState({isLoading: false})
                 console.info(err);
             });
     }
 
     orderCancelClickedHandler = () => {
-        console.log('Order canceled!')
         this.setState({showOrderConfirm: false})
     }
 
@@ -99,10 +96,10 @@ class BurgerBuilder extends React.Component{
         const { ingredients, totalPrice, showOrderConfirm, isLoading } = this.state;
         const disabledIngredients = Object.keys(ingredients).filter((ing) => ingredients[ing] <= 0);
         const canCompleteOrder = !!Object.values(ingredients).reduce(
-            (previousValue, currentItem) => previousValue + currentItem);
+            (previousValue, currentItem) => previousValue + currentItem, 0);
 
         let orderSummery = <OrderSummary ingredients={ingredients}
-                                         totalPrice={totalPrice.toFixed(2)}
+                                         totalPrice={totalPrice ? totalPrice.toFixed(2) : null}
                                          acceptClicked={this.orderAcceptClickedHandler}
                                          cancelClicked={this.orderCancelClickedHandler}/>
 
@@ -119,7 +116,7 @@ class BurgerBuilder extends React.Component{
                 <BuildControls ingredientAdded={this.addIngredientHandler}
                                ingredientRemoved={this.removeIngredientHandler}
                                disabled={disabledIngredients}
-                               price={totalPrice.toFixed(2)}
+                               price={totalPrice ? totalPrice.toFixed(2) : null}
                                canCompleteOrder={canCompleteOrder}
                                orderCompleteHandler={this.orderCompleteHandler}
                 />
