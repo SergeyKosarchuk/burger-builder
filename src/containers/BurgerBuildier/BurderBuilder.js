@@ -6,6 +6,7 @@ import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spiner from '../../components/UI/Spinner/Spiner';
+import withErrorHandler from '../withErrorHandler/withErrorHandler';
 
 const MIN_PRICE = 4;
 const INGREDIENT_PRICES = {
@@ -127,4 +128,4 @@ class BurgerBuilder extends React.Component{
     }
 }
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, axios);
