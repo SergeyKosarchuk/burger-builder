@@ -1,10 +1,11 @@
 import React from 'react';
 import axios from '../../axios-orders';
 
-import Burger from "../../components/Burger/Burger";
-import BuildControls from "../../components/Burger/BuildControls/BuildControls";
-import Modal from "../../components/UI/Modal/Modal";
-import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+import Burger from '../../components/Burger/Burger';
+import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import Spiner from '../../components/UI/Spinner/Spiner';
 
 const MIN_PRICE = 4;
 const INGREDIENT_PRICES = {
@@ -25,6 +26,7 @@ class BurgerBuilder extends React.Component{
         ingredients: Object.assign({}, STARTING_INGREDIENTS),
         totalPrice: MIN_PRICE,
         showOrderConfirm: false,
+        isLoading: false,
     };
 
     addIngredientHandler = (type) => {
@@ -62,7 +64,7 @@ class BurgerBuilder extends React.Component{
     }
 
     orderAcceptClickedHandler = () => {
-        this.setState({showOrderConfirm: false})
+        this.setState({isLoading: true})
         const order = {
             ingredients: this.state.ingredients,
             price: this.state.totalPrice,
@@ -75,12 +77,14 @@ class BurgerBuilder extends React.Component{
                 },
                 email: 'test@test.ru'
             },
-            deliveryMethod: 'plane'
+            deliveryMethod: 'plane',
+            created: new Date().toISOString()
         }
         axios.post('orders/.json', order)
             .then((result) => {
-                console.info(result);
+                this.setState({isLoading: false, showOrderConfirm: false})
             }).catch((err) => {
+                this.setState({isLoading: false})
                 console.info(err);
             });
     }
@@ -91,18 +95,24 @@ class BurgerBuilder extends React.Component{
     }
 
     render(){
-        const { ingredients, totalPrice, showOrderConfirm } = this.state;
+        const { ingredients, totalPrice, showOrderConfirm, isLoading } = this.state;
         const disabledIngredients = Object.keys(ingredients).filter((ing) => ingredients[ing] <= 0);
         const canCompleteOrder = !!Object.values(ingredients).reduce(
             (previousValue, currentItem) => previousValue + currentItem);
 
+        let orderSummery = <OrderSummary ingredients={ingredients}
+                                         totalPrice={totalPrice.toFixed(2)}
+                                         acceptClicked={this.orderAcceptClickedHandler}
+                                         cancelClicked={this.orderCancelClickedHandler}/>
+
+        if (isLoading) {
+            orderSummery = <Spiner />
+        }
+
         return (
             <>
                 <Modal show={showOrderConfirm} clicked={this.orderCancelHandler}>
-                    <OrderSummary ingredients={ingredients}
-                                  totalPrice={totalPrice.toFixed(2)}
-                                  acceptClicked={this.orderAcceptClickedHandler}
-                                  cancelClicked={this.orderCancelClickedHandler}/>
+                    {orderSummery}
                 </Modal>
                 <Burger ingredients={ingredients}/>
                 <BuildControls ingredientAdded={this.addIngredientHandler}
