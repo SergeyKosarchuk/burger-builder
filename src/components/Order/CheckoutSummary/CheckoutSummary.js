@@ -19,15 +19,15 @@ const BurgerInfo = styled.div`
     margin: auto;
 `;
 
-const checkoutSummary = ( { ingredients } ) => {
+const checkoutSummary = ( { ingredients, checkoutCancelled, checkoutContinued } ) => {
     return (
         <StyledSummary>
             <h1>We hope it tastes well!</h1>
             <BurgerInfo>
                 <Burger ingredients={ingredients}/>
             </BurgerInfo>
-            <Button>CANCEL</Button>
-            <Button type={ACCEPT_TYPE}>CONTINUE</Button>
+            <Button clicked={checkoutCancelled}>CANCEL</Button>
+            <Button type={ACCEPT_TYPE} clicked={checkoutContinued}>CONTINUE</Button>
         </StyledSummary>
     );
 }

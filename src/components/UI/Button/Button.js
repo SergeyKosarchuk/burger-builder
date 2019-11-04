@@ -15,8 +15,8 @@ const Button = styled.button`
     font-weight: bold;
 `;
 
-export default function button (props) {
-    return <Button onClick={props.clicked} type={props.type}>{props.children}</Button>
+export default function button ( {clicked, type, children} ) {
+    return <Button onClick={clicked} type={type}>{children}</Button>
 }
 
 export { ACCEPT_TYPE };
