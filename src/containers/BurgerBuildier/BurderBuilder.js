@@ -1,5 +1,6 @@
 import React from 'react';
 import axios from '../../axios-orders';
+import { withRouter } from 'react-router-dom';
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -64,28 +65,29 @@ class BurgerBuilder extends React.Component{
     }
 
     orderAcceptClickedHandler = () => {
-        this.setState({isLoading: true})
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Sergey',
-                address: {
-                    street: 'Test street',
-                    zipCode: '41351',
-                    country: 'Russia',
-                },
-                email: 'test@test.ru'
-            },
-            deliveryMethod: 'plane',
-            created: new Date().toISOString()
-        }
-        axios.post('orders/.json', order)
-            .then((result) => {
-                this.setState({isLoading: false, showOrderConfirm: false})
-            }).catch((err) => {
-                console.info(err);
-            });
+        // this.setState({isLoading: true})
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     price: this.state.totalPrice,
+        //     customer: {
+        //         name: 'Sergey',
+        //         address: {
+        //             street: 'Test street',
+        //             zipCode: '41351',
+        //             country: 'Russia',
+        //         },
+        //         email: 'test@test.ru'
+        //     },
+        //     deliveryMethod: 'plane',
+        //     created: new Date().toISOString()
+        // }
+        // axios.post('orders/.json', order)
+        //     .then((result) => {
+        //         this.setState({isLoading: false, showOrderConfirm: false})
+        //     }).catch((err) => {
+        //         console.info(err);
+        //     });
+        this.props.history.push('/checkout');
     }
 
     orderCancelClickedHandler = () => {
@@ -125,4 +127,4 @@ class BurgerBuilder extends React.Component{
     }
 }
 
-export default withErrorHandler(BurgerBuilder, axios);
+export default withRouter(withErrorHandler(BurgerBuilder, axios));

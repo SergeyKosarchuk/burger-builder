@@ -26,8 +26,8 @@ const checkoutSummary = ( { ingredients } ) => {
             <BurgerInfo>
                 <Burger ingredients={ingredients}/>
             </BurgerInfo>
-            <Button clicked>CANCEL</Button>
-            <Button type={ACCEPT_TYPE} clicked>CONTINUE</Button>
+            <Button>CANCEL</Button>
+            <Button type={ACCEPT_TYPE}>CONTINUE</Button>
         </StyledSummary>
     );
 }
