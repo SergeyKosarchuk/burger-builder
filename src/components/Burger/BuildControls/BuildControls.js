@@ -1,7 +1,8 @@
 import React from 'react';
-import styled from "styled-components";
-import BuildControl from "./BuildControl/BuildControl";
+import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
+import BuildControl from "./BuildControl/BuildControl";
 
 const BuildControls = styled.div`
     width: 100%;
@@ -12,6 +13,31 @@ const BuildControls = styled.div`
     box-shadow: 0 2px 1px #ccc;
     margin: auto;
     padding: 10px 0;
+`;
+
+const OrderLink = styled(Link)`
+    background-color: #DAD735;
+    text-decoration: none;
+    outline: none;
+    cursor: pointer;
+    border: 1px solid #966909;
+    color: #966909;
+    font-family: inherit;
+    font-size: 1.2em;
+    padding: 15px 30px;
+    box-shadow: 2px 2px 2px #966909;
+
+    :hover, :active {
+        background-color: #A0DB41;
+        border: 1px solid #966909;
+        color: #966909;
+    };
+    :disabled {
+        background-color: #C7C6C6;
+        cursor: not-allowed;
+        border: 1px solid #ccc;
+        color: #888888
+    };
 `;
 
 const OrderButton = styled.button`
@@ -55,7 +81,7 @@ export default function buildControls (props) {
                                                      removed={() => props.ingredientRemoved(control.type)}
                                                      disabled={props.disabled.includes(control.type)}
             />)}
-            <OrderButton disabled={!props.canCompleteOrder} onClick={props.orderCompleteHandler}>ORDER NOW</OrderButton>
+            <OrderLink disabled={!props.canCompleteOrder} to='/checkout'>ORDER NOW</OrderLink>
         </BuildControls>
     );
 }

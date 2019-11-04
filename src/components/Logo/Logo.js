@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import BurgerLogo from '../../assets/images/burger-logo.png';
+import { Link } from 'react-router-dom';
 
 const Logo = styled.div`
     background-color: white;
@@ -17,7 +18,7 @@ const Img = styled.img`
 export default function logo (props) {
     return (
     <Logo>
-        <Img alt={props.alt ? props.alt : 'My Burger'} src={BurgerLogo}/>
+        <Link to='/'><Img alt={props.alt ? props.alt : 'My Burger'} src={BurgerLogo}/></Link>
     </Logo>)
 }
 
