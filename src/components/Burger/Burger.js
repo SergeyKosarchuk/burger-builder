@@ -10,7 +10,7 @@ const Burger = styled.div`
     text-align: center;
     font-weight: bold;
     font-size: 1.2rem;
-    
+
     @media (min-width: 1000px) and (min-height: 700px) {
         width: 700px;
         height: 600px;
