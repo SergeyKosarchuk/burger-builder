@@ -65,29 +65,13 @@ class BurgerBuilder extends React.Component{
     }
 
     orderAcceptClickedHandler = () => {
-        // this.setState({isLoading: true})
-        // const order = {
-        //     ingredients: this.state.ingredients,
-        //     price: this.state.totalPrice,
-        //     customer: {
-        //         name: 'Sergey',
-        //         address: {
-        //             street: 'Test street',
-        //             zipCode: '41351',
-        //             country: 'Russia',
-        //         },
-        //         email: 'test@test.ru'
-        //     },
-        //     deliveryMethod: 'plane',
-        //     created: new Date().toISOString()
-        // }
-        // axios.post('orders/.json', order)
-        //     .then((result) => {
-        //         this.setState({isLoading: false, showOrderConfirm: false})
-        //     }).catch((err) => {
-        //         console.info(err);
-        //     });
-        this.props.history.push('/checkout');
+        const queryString = require('query-string');
+        const query = queryString.stringify(this.state.ingredients);
+
+        this.props.history.push({
+            pathname: '/checkout',
+            search: query,
+        });
     }
 
     orderCancelClickedHandler = () => {

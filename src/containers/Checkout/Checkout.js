@@ -5,12 +5,13 @@ import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSumm
 
 class Checkout extends React.Component {
     state = {
-        ingredients: {
-            salad: 1,
-            meat: 1,
-            cheese: 1,
-            bacon: 1
-        }
+        ingredients: {}
+    }
+
+    componentDidMount() {
+        const queryString = require('query-string');
+        const params = queryString.parse(this.props.location.search);
+        this.setState({ingredients: params})
     }
 
     checkoutCanceledHandler = () => {
