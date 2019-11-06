@@ -19,24 +19,18 @@ class Checkout extends React.Component {
         }
     }
 
-    checkoutCanceledHandler = () => {
-        this.props.history.goBack()
-    }
-
-    checkoutContinuedHandler = () => {
-        this.props.history.push(this.props.match.path + '/contact-data')
-    }
-
     render () {
-        const { ingredients } = this.state;
+        const { ingredients, totalPrice } = this.state;
 
         return (
             <div>
                 <CheckoutSummary ingredients={ingredients}
-                                checkoutCancelled={this.checkoutCanceledHandler}
-                                checkoutContinued={this.checkoutContinuedHandler}/>
+                                checkoutCancelled={() => this.props.history.goBack()}
+                                checkoutContinued={() => this.props.history.push(this.props.match.path + '/contact-data')}/>
                 <Route path={this.props.match.path + '/contact-data'}>
-                    <ContactData />
+                    <ContactData ingredients={ingredients}
+                                 totalPrice={totalPrice}
+                                 onComplete={() => this.props.history.push('/')}/>
                 </Route>
             </div>
         );
