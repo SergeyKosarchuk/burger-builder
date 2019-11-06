@@ -65,12 +65,11 @@ class BurgerBuilder extends React.Component{
     }
 
     orderAcceptClickedHandler = () => {
-        const queryString = require('query-string');
-        const query = queryString.stringify(this.state.ingredients);
+        const { totalPrice, ingredients } = this.state
 
         this.props.history.push({
             pathname: '/checkout',
-            search: query,
+            state: {ingredients: ingredients, totalPrice: totalPrice}
         });
     }
 
