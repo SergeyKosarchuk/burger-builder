@@ -1,8 +1,10 @@
 import React from 'react';
+import { Switch, Route } from 'react-router-dom';
+
 import Layout from "./containers/Layout/Layout";
 import BurgerBuilder from "./containers/BurgerBuildier/BurderBuilder";
 import Checkout from './containers/Checkout/Checkout';
-import { Switch, Route } from 'react-router-dom';
+import Orders from './containers/Orders/Orders';
 
 function App() {
   return (
@@ -11,6 +13,9 @@ function App() {
         <Switch>
           <Route path='/checkout'>
             <Checkout />
+          </Route>
+          <Route path='/orders'>
+            <Orders />
           </Route>
           <Route path='/'>
             <BurgerBuilder />

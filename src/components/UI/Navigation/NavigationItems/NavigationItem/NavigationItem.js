@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { NavLink } from 'react-router-dom';
 
 const NavigationItem = styled.li`
     margin: 10px 0;
@@ -19,28 +20,31 @@ const NavigationItem = styled.li`
     }
 `;
 
-const A = styled.a`
-    color: ${(props) => props.active ? '#40A4C8' : '#8F5C2C'};
+const StyledNavLink = styled(NavLink)`
     text-decoration: none;
     width: 100%;
     box-sizing: border-box;
     display: block;
+    color: #40A4C8;
+
+    &.active {
+        background-color: #8F5C2C;
+        border-bottom: 4px solid #40A4C8;
+    }
+
+    :hover {
+        background-color: #8F5C2C;
+        border-bottom: 4px solid #40A4C8;
+    }
 
     @media (min-width: 500px) {
         color: white;
         text-decoration: none;
         height: 100%;
         padding: 16px 10px;
-        background-color: ${(props) => props.active ? '#8F5C2C' : '#703b09'};
-        border-bottom: ${(props) => props.active ? '4px solid #40A4C8' : ''};
-
-        :hover {
-            background-color: #8F5C2C;
-            border-bottom: 4px solid #40A4C8;
-        }
     }
 `;
 
-export default function navigationItem ({children, link, active}) {
-    return <NavigationItem><A active={active} href={link}>{children}</A></NavigationItem>
+export default function navigationItem ({children, link}) {
+    return <NavigationItem><StyledNavLink to={link} exact>{children}</StyledNavLink></NavigationItem>
 }
