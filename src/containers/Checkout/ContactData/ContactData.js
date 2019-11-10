@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import axios from '../../../axios-orders';
 import Button, { ACCEPT_TYPE } from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spiner';
-import Input from '../../../components/UI/Input/Input';
+import makeInput from '../../../components/UI/Input/Input';
 
 const StyledContactData = styled.div`
     margin: 20px auto;
@@ -29,6 +29,55 @@ export default class ContactData extends React.Component {
             postalCode: ''
         },
         isLoading: false,
+    }
+    orderForm = {
+        name: {
+            fieldType: 'input',
+            elementConfig: {
+                type: 'text',
+                placeholder: 'Your name',
+            },
+            value: ''
+        },
+        email: {
+            fieldType: 'input',
+            elementConfig: {
+                type: 'text',
+                placeholder: 'Your email',
+            },
+            value: ''
+        },
+        street: {
+            fieldType: 'input',
+            elementConfig: {
+                type: 'text',
+                placeholder: 'Your street',
+            },
+            value: '',
+        },
+        postalCode: {
+            fieldType: 'input',
+            elementConfig: {
+                type: 'text',
+                placeholder: 'Your postal code',
+            },
+            value: ''
+        },
+        deliveryMethod: {
+            fieldType: 'select',
+            elementConfig: {
+                options: [
+                    {value: 'fast', label: 'Fastest'},
+                    {value: 'cheap', label: 'Cheapest'},
+                    {
+                        value: 'default',
+                        label: 'Choose delivery method',
+                        disabled: true,
+                    },
+                ],
+                defaultValue: 'default',
+            },
+        },
     }
 
     orderHandler = (event) => {
@@ -61,14 +110,15 @@ export default class ContactData extends React.Component {
             return <Spinner />
         }
 
+        const inputs = Object.entries(this.orderForm).map(([fieldName, config]) => {
+            return makeInput(fieldName, config.fieldType, config.elementConfig)
+        })
+
         return (
             <StyledContactData>
                 <h4>Enter your contact data</h4>
                 <form>
-                    <Input type='text' fieldName='name' placeholder='Your name' value={this.state.name} onChange={(event) => this.setState({name: event.target.value})}/>
-                    <Input type='text' fieldName='email' placeholder='Your emai' value={this.state.email} onChange={(event) => this.setState({email: event.target.value})}/>
-                    <Input type='text' fieldName='street' placeholder='Your street' value={this.state.street} onChange={(event) => this.setState({street: event.target.value})}/>
-                    <Input type='text' fieldName='postal code' placeholder='Your postal code' value={this.state.postalCode} onChange={(event) => this.setState({postalCode: event.target.value})}/>
+                    {inputs}
                     <Button type={ACCEPT_TYPE} clicked={this.orderHandler}>SAVE ORDER</Button>
                 </form>
             </StyledContactData>

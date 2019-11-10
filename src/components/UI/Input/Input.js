@@ -1,8 +1,8 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 
-const Input = styled.div`
+const InputWrapper = styled.div`
     width: 100%;
     padding: 10px;
     box-sizing: border-box;
@@ -14,7 +14,7 @@ const Label = styled.label`
     margin-bottom: 8px;
 `;
 
-const StyledInput = styled.input`
+const styledInput = css`
     outline: none;
     border: 1px solid #ccc;
     background-color: white;
@@ -30,13 +30,46 @@ const StyledInput = styled.input`
     }
 `;
 
-const input = (props) => {
+const StyledInput = styled.input`
+    ${styledInput}
+`;
+
+const StyledSelect = styled.select`
+    ${styledInput}
+`;
+
+const Option = styled.option``;
+
+const Input = (props) => {
     return (
-        <Input>
+        <InputWrapper>
             <Label>{props.fieldName}</Label>
             <StyledInput {...props} />
-        </Input>
+        </InputWrapper>
     );
 }
 
-export default input;
+const Select = (props) => {
+    const options = props.options.map(option => <Option key={option.value} {...option}/>)
+
+    return (
+        <InputWrapper>
+            <Label>{props.fieldName}</Label>
+            <StyledSelect {...props}>{options}</StyledSelect>
+        </InputWrapper>
+    );
+}
+
+function makeInput (fieldName, fieldType , fieldOptions) {
+    switch (fieldType) {
+        case 'input':
+            return <Input key={fieldName} {...fieldOptions}/>
+        case 'select':
+            return <Select key={fieldName} {...fieldOptions}/>
+        default:
+            return <Input key={fieldName} {...fieldOptions}/>;
+    }
+}
+
+export default makeInput;
+export { Input, Select };
