@@ -1,26 +1,13 @@
 import React from 'react';
 import { withRouter, Route } from 'react-router-dom';
+import { connect } from 'react-redux'
 
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import ContactData from '../Checkout/ContactData/ContactData';
 
 class Checkout extends React.Component {
-    state = {
-        ingredients: {},
-        totalPrice: null,
-    }
-
-    componentDidMount() {
-        if ( this.props.location.state ) {
-            this.setState({
-                ingredients: this.props.location.state.ingredients,
-                totalPrice: this.props.location.state.totalPrice
-            })
-        }
-    }
-
     render () {
-        const { ingredients, totalPrice } = this.state;
+        const { ingredients, totalPrice } = this.props;
 
         return (
             <div>
@@ -37,4 +24,14 @@ class Checkout extends React.Component {
     }
 }
 
-export default withRouter(Checkout);
+const mapStateToProps = (state) => {
+    return {
+        ingredients: state.ingredients,
+        totalPrice: state.totalPrice
+    }
+}
+
+export default connect(
+    mapStateToProps,
+    null
+)(withRouter(Checkout));

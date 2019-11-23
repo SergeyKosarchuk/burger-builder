@@ -1,7 +1,9 @@
 import React from 'react';
 import axios from '../../axios-orders';
 import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
+import { SAVE_ORDER } from '../../store/actions';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
@@ -67,10 +69,8 @@ class BurgerBuilder extends React.Component{
     orderAcceptClickedHandler = () => {
         const { totalPrice, ingredients } = this.state
 
-        this.props.history.push({
-            pathname: '/checkout',
-            state: {ingredients: ingredients, totalPrice: totalPrice}
-        });
+        this.props.saveOrder(ingredients, totalPrice)
+        this.props.history.push({pathname: '/checkout'});
     }
 
     orderCancelClickedHandler = () => {
@@ -110,4 +110,16 @@ class BurgerBuilder extends React.Component{
     }
 }
 
-export default withRouter(withErrorHandler(BurgerBuilder, axios));
+const dispatchStateToProps = (dispatch) => {
+    return {
+        saveOrder: (ingredients, totalPrice) => {
+            const payload = {ingredients: ingredients, totalPrice: totalPrice};
+            return dispatch({type: SAVE_ORDER, payload})
+        }
+    }
+}
+
+export default connect(
+    null,
+    dispatchStateToProps
+)(withRouter(withErrorHandler(BurgerBuilder, axios)));
