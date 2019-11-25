@@ -1,19 +1,62 @@
-import { SAVE_ORDER } from './actions'
+import { ADD_INGREDIENT, DELETE_INGREDIENT } from './actions'
+import { SALADE, CHEESE, BACON, MEAT } from '../consts/ingredients';
 
 const initialState = {
-    totalPrice: null,
-    ingredients: {},
+    totalPrice: 12,
+    ingredients: {
+        [SALADE]: 1,
+        [CHEESE]: 2,
+        [BACON]: 1,
+        [MEAT]: 1
+    },
+    ingredientPrices: {
+        [SALADE]: 1,
+        [CHEESE]: 2,
+        [BACON]: 3,
+        [MEAT]: 4
+    }
 };
 
-const saveOrder = (state, ingredients, totalPrice) => {
-    return {...state, ingredients: ingredients, totalPrice: totalPrice};
+const calculateTotalPrice = (ingredients, ingredientPrices) => {
+    return Object.entries(ingredients).reduce((previousValue, currentValue) => {
+        return previousValue + ingredientPrices[currentValue[0]] * currentValue[1];
+    }, 0)
 }
 
-const reducer = ( state = initialState, action ) => {
+const copyState = (state) => {
+    return {
+        ...state,
+        ingredients: {
+            ...state.ingredients
+        },
+        ingredientPrices: {
+            ...state.ingredientPrices
+        }
+    };
+}
+
+const addIngedient = (state, ingredient) => {
+    const newState = copyState(state);
+    newState.ingredients[ingredient] += 1;
+    newState.totalPrice = calculateTotalPrice(
+        newState.ingredients, newState.ingredientPrices)
+    return newState
+}
+
+const deleteIngredient = (state, ingredient) => {
+    const newState = copyState(state);
+    newState.ingredients[ingredient] -= 1;
+    newState.totalPrice = calculateTotalPrice(
+        newState.ingredients, newState.ingredientPrices)
+    return newState
+}
+
+const reducer = (state = initialState, action) => {
     switch ( action.type ) {
-        case SAVE_ORDER:
-            const {ingredients, totalPrice} = action.payload;
-            return saveOrder(state, ingredients, totalPrice)
+        case ADD_INGREDIENT:
+            return addIngedient(state, action.ingredient);
+        case DELETE_INGREDIENT:
+            return deleteIngredient(state, action.ingredient);
         default:
             return state;
     }

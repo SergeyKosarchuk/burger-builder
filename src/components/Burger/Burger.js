@@ -1,6 +1,8 @@
 import React from 'react';
-import styled from "styled-components";
-import BurgerIngredient from "./BurgerIngredient/BurgerIngredient";
+import styled from 'styled-components';
+import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
+
+import { BREAD_BOTTOM, BREAD_TOP } from '../../consts/ingredients';
 
 const Burger = styled.div`
     width: 100%;
@@ -26,7 +28,7 @@ const Burger = styled.div`
 `;
 
 export default function burger({ingredients}) {
-    let burger_ingredients = [<BurgerIngredient type='bread-top' key='bread-top-1'/>];
+    let burger_ingredients = [<BurgerIngredient type={BREAD_TOP} key={BREAD_TOP}/>];
 
     for (let [name, count] of Object.entries(ingredients)){
         for (let i = 0; i < count; i++) {
@@ -34,7 +36,7 @@ export default function burger({ingredients}) {
         }
     }
 
-    burger_ingredients.push(<BurgerIngredient type='bread-bottom' key='bread-bottom-1'/>);
+    burger_ingredients.push(<BurgerIngredient type={BREAD_BOTTOM} key={BREAD_BOTTOM}/>);
     const msg = Object.values(ingredients).reduce((total, current) => total + current, 0) ? '' : 'Add ingredients';
     return <Burger>{burger_ingredients}<p>{msg}</p></Burger>
 }

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import styled from "styled-components";
+import styled from 'styled-components';
+
+import * as ingredients from '../../../consts/ingredients';
 
 const BreadBottom = styled.div`
     height: 13%;
@@ -42,7 +44,8 @@ const Seeds1 = styled.div`
         border-radius: 40%;
         transform: rotate(60deg);
         box-shadow: inset -1px 2px #c9c9c9;
-    before {
+    }
+    :before {
         content: "";
         width: 100%;
         height: 100%;
@@ -53,9 +56,8 @@ const Seeds1 = styled.div`
         border-radius: 40%;
         transform: rotate(60deg);
         box-shadow: inset -1px -3px #c9c9c9;
-}
+    }
 `;
-
 
 const Seeds2 = styled.div`
     width: 10%;
@@ -67,7 +69,7 @@ const Seeds2 = styled.div`
     border-radius: 40%;
     transform: rotate(10deg);
     box-shadow: inset -3px 0 #c9c9c9;
-    before {
+    :before {
         content: "";
         width: 100%;
         height: 100%;
@@ -78,6 +80,7 @@ const Seeds2 = styled.div`
         border-radius: 40%;
         transform: rotate(90deg);
         box-shadow: inset 1px 3px #c9c9c9;
+    }
 `;
 
 const Meat = styled.div`
@@ -113,12 +116,12 @@ const Bacon = styled.div`
 
 
 const ingredientMapping = {
-    'bread-bottom': <BreadBottom/>,
-    'bread-top': <BreadTop><Seeds1/><Seeds2/></BreadTop>,
-    'meat': <Meat/>,
-    'cheese': <Cheese/>,
-    'salad': <Salad/>,
-    'bacon': <Bacon/>,
+    [ingredients.BREAD_BOTTOM]: <BreadBottom/>,
+    [ingredients.BREAD_TOP]: <BreadTop><Seeds1/><Seeds2/></BreadTop>,
+    [ingredients.MEAT]: <Meat/>,
+    [ingredients.CHEESE]: <Cheese/>,
+    [ingredients.SALADE]: <Salad/>,
+    [ingredients.BACON]: <Bacon/>,
 };
 
 export default class BurgerIngredient extends React.Component{

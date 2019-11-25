@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import BuildControl from "./BuildControl/BuildControl";
+import { SALADE, CHEESE, BACON, MEAT } from '../../../consts/ingredients';
 
 const BuildControls = styled.div`
     width: 100%;
@@ -39,10 +40,10 @@ const OrderButton = styled.button`
 `;
 
 const controls = [
-    { label: 'Salad', type: 'salad' },
-    { label: 'Bacon', type: 'bacon' },
-    { label: 'Cheese', type: 'cheese' },
-    { label: 'Meat', type: 'meat' },
+    { label: 'Salad', type: SALADE },
+    { label: 'Bacon', type: CHEESE },
+    { label: 'Cheese', type: BACON },
+    { label: 'Meat', type: MEAT },
 ];
 
 export default function buildControls (props) {
