@@ -45,7 +45,7 @@ const Input = (props) => {
     return (
         <InputWrapper>
             <Label>{props.fieldName}</Label>
-            <StyledInput {...props}/>
+            <StyledInput {...props} name={props.fieldName}/>
         </InputWrapper>
     );
 }

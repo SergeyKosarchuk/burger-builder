@@ -5,6 +5,7 @@ import Layout from "./containers/Layout/Layout";
 import BurgerBuilder from "./containers/BurgerBuildier/BurderBuilder";
 import Checkout from './containers/Checkout/Checkout';
 import Orders from './containers/Orders/Orders';
+import Auth from './containers/Auth/Auth';
 
 function App() {
   return (
@@ -16,6 +17,9 @@ function App() {
           </Route>
           <Route path='/orders'>
             <Orders />
+          </Route>
+          <Route path='/registration'>
+            <Auth />
           </Route>
           <Route path='/'>
             <BurgerBuilder />
