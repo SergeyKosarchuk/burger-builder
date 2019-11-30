@@ -1,4 +1,4 @@
-export const SALADE = 'SALADE';
+export const SALAD = 'SALAD';
 export const CHEESE = 'CHEESE';
 export const BACON = 'BACON';
 export const MEAT = 'MEAT';

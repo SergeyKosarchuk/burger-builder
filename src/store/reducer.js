@@ -1,16 +1,18 @@
-import { ADD_INGREDIENT, DELETE_INGREDIENT } from './actions'
-import { SALADE, CHEESE, BACON, MEAT } from '../consts/ingredients';
+import {
+    ADD_INGREDIENT,
+    DELETE_INGREDIENT,
+    SET_INGREDIENTS,
+    FETCH_INGREDIENTS,
+    FETCH_INGREDIENTS_ERROR } from './actions'
+import { SALAD, CHEESE, BACON, MEAT } from '../consts/ingredients';
 
 const initialState = {
     totalPrice: 12,
-    ingredients: {
-        [SALADE]: 1,
-        [CHEESE]: 2,
-        [BACON]: 1,
-        [MEAT]: 1
-    },
+    ingredientsIsLoading: false,
+    ingredientsIsLoadingError: false,
+    ingredients: {},
     ingredientPrices: {
-        [SALADE]: 1,
+        [SALAD]: 1,
         [CHEESE]: 2,
         [BACON]: 3,
         [MEAT]: 4
@@ -40,7 +42,7 @@ const addIngedient = (state, ingredient) => {
     newState.ingredients[ingredient] += 1;
     newState.totalPrice = calculateTotalPrice(
         newState.ingredients, newState.ingredientPrices)
-    return newState
+    return newState;
 }
 
 const deleteIngredient = (state, ingredient) => {
@@ -51,12 +53,38 @@ const deleteIngredient = (state, ingredient) => {
     return newState
 }
 
+const setIngredients = (state, ingredients) => {
+    const newState = copyState(state);
+    newState.ingredients = ingredients;
+    newState.ingredientsIsloading = false;
+    return newState;
+}
+
+const fetchIngredients = (state) => {
+    const newState = copyState(state);
+    newState.ingredientsIsLoading = true;
+    return newState;
+}
+
+const fetchIngredientsError = (state) => {
+    const newState = copyState(state);
+    newState.ingredientsIsLoading = false;
+    newState.ingredientsIsLoadingError = true;
+    return newState;
+}
+
 const reducer = (state = initialState, action) => {
     switch ( action.type ) {
         case ADD_INGREDIENT:
             return addIngedient(state, action.ingredient);
         case DELETE_INGREDIENT:
             return deleteIngredient(state, action.ingredient);
+        case SET_INGREDIENTS:
+            return setIngredients(state, action.ingredients);
+        case FETCH_INGREDIENTS:
+            return fetchIngredients(state);
+        case FETCH_INGREDIENTS_ERROR:
+            return fetchIngredientsError(state);
         default:
             return state;
     }

@@ -2,7 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import * as ingredients from '../../../consts/ingredients';
+import {
+    BREAD_BOTTOM,
+    BREAD_TOP,
+    SALAD,
+    CHEESE,
+    BACON,
+    MEAT} from '../../../consts/ingredients';
 
 const BreadBottom = styled.div`
     height: 13%;
@@ -116,12 +122,12 @@ const Bacon = styled.div`
 
 
 const ingredientMapping = {
-    [ingredients.BREAD_BOTTOM]: <BreadBottom/>,
-    [ingredients.BREAD_TOP]: <BreadTop><Seeds1/><Seeds2/></BreadTop>,
-    [ingredients.MEAT]: <Meat/>,
-    [ingredients.CHEESE]: <Cheese/>,
-    [ingredients.SALADE]: <Salad/>,
-    [ingredients.BACON]: <Bacon/>,
+    [BREAD_BOTTOM]: <BreadBottom/>,
+    [BREAD_TOP]: <BreadTop><Seeds1/><Seeds2/></BreadTop>,
+    [MEAT]: <Meat/>,
+    [CHEESE]: <Cheese/>,
+    [SALAD]: <Salad/>,
+    [BACON]: <Bacon/>,
 };
 
 export default class BurgerIngredient extends React.Component{

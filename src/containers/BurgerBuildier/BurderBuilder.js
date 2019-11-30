@@ -3,7 +3,7 @@ import axios from '../../axios-orders';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { addIngredient, deleteIngredient } from '../../store/actions';
+import { addIngredient, deleteIngredient, initIngredients } from '../../store/actions';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
@@ -15,7 +15,6 @@ import withErrorHandler from '../withErrorHandler/withErrorHandler';
 class BurgerBuilder extends React.Component{
     state = {
         showOrderConfirm: false,
-        isLoading: false,
     };
 
     orderCompleteHandler = () => {
@@ -34,9 +33,13 @@ class BurgerBuilder extends React.Component{
         this.setState({showOrderConfirm: false})
     }
 
+    componentDidMount () {
+        this.props.initIngredients()
+    }
+
     render(){
-        const { showOrderConfirm, isLoading } = this.state;
-        const { ingredients, totalPrice } = this.props;
+        const showOrderConfirm = this.state.showOrderConfirm;
+        const { ingredients, totalPrice, isLoading } = this.props;
         const disabledIngredients = Object.keys(ingredients).filter((ing) => ingredients[ing] <= 0);
         const canCompleteOrder = !!Object.values(ingredients).reduce(
             (previousValue, currentItem) => previousValue + currentItem, 0);
@@ -72,11 +75,14 @@ const dispatchStateToProps = dispatch => {
     return {
         addIngredient: (ingredient) => dispatch(addIngredient(ingredient)),
         deleteIngredient: (ingredient) => dispatch(deleteIngredient(ingredient)),
+        initIngredients: () => dispatch(initIngredients())
     }
 }
 
 const mapStateToProps = state => {
     return {
+        isLoading: state.ingredientsIsLoading,
+        isError: state.ingredientsIsLoadingError,
         totalPrice: state.totalPrice,
         ingredients: state.ingredients,
     }
