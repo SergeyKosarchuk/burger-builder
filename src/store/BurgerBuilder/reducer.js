@@ -4,16 +4,13 @@ import {
     SET_INGREDIENTS,
     FETCH_INGREDIENTS,
     FETCH_INGREDIENTS_ERROR,
-    AUTH_START,
-    AUTH_FAILED,
-    AUTH_SUCCSESS
 } from './actions'
-import { SALAD, CHEESE, BACON, MEAT } from '../consts/ingredients';
+import { SALAD, CHEESE, BACON, MEAT } from '../../consts/ingredients';
 
 const initialState = {
     totalPrice: 12,
-    ingredientsIsLoading: false,
-    ingredientsIsLoadingError: false,
+    isLoading: false,
+    error: false,
     ingredients: {},
     ingredientPrices: {
         [SALAD]: 1,
@@ -21,10 +18,6 @@ const initialState = {
         [BACON]: 3,
         [MEAT]: 4
     },
-    token: null,
-    userId: null,
-    error: null,
-    isLoading: false,
 };
 
 const calculateTotalPrice = (ingredients, ingredientPrices) => {
@@ -64,45 +57,20 @@ const deleteIngredient = (state, ingredient) => {
 const setIngredients = (state, ingredients) => {
     const newState = copyState(state);
     newState.ingredients = ingredients;
-    newState.ingredientsIsloading = false;
+    newState.isLoading = false;
     return newState;
 }
 
 const fetchIngredients = (state) => {
     const newState = copyState(state);
-    newState.ingredientsIsLoading = true;
-    return newState;
-}
-
-const fetchIngredientsError = (state) => {
-    const newState = copyState(state);
-    newState.ingredientsIsLoading = false;
-    newState.ingredientsIsLoadingError = true;
-    return newState;
-}
-
-const authStart = state => {
-    const newState = copyState(state);
     newState.isLoading = true;
     return newState;
 }
 
-const authSuccsess = (state, action) => {
+const fetchIngredientsError = (state, error) => {
     const newState = copyState(state);
-    newState.token = action.token;
-    newState.userId = action.userId;
-    newState.error = action.error;
     newState.isLoading = false;
-    return newState;
-}
-
-
-
-const authFailed = (state, action) => {
-    const newState = copyState(state);
-    newState.token = null;
-    newState.error = action.error;
-    newState.isLoading = false;
+    newState.error = error;
     return newState;
 }
 
@@ -113,9 +81,6 @@ const reducer = (state = initialState, action) => {
         case SET_INGREDIENTS: return setIngredients(state, action.ingredients);
         case FETCH_INGREDIENTS: return fetchIngredients(state);
         case FETCH_INGREDIENTS_ERROR: return fetchIngredientsError(state);
-        case AUTH_START: return authStart(state, action);
-        case AUTH_SUCCSESS: return authSuccsess(state, action);
-        case AUTH_FAILED: return authFailed(state, action);
         default: return state;
     }
 }

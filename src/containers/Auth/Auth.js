@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { Input } from '../../components/UI/Input/Input';
 import Spinner from '../../components/UI/Spinner/Spiner';
 import Button, { ACCEPT_TYPE } from '../../components/UI/Button/Button';
-import * as actions from '../../store/actions';
+import { authenticate } from '../../store/Auth/actions';
 
 const StyledAuth = styled.div`
     margin: 20px auto;
@@ -80,13 +80,13 @@ class Auth extends React.Component {
 
 const mapStateToProps = state => {
     return {
-        isLoading: state.isLoading,
+        isLoading: state.auth.isLoading,
     }
 }
 
 const mapDispatchToProps = dispatch => {
     return {
-        authenticate: (email, password, isSignUp) => dispatch(actions.authanticate(email, password, isSignUp))
+        authenticate: (email, password, isSignUp) => dispatch(authenticate(email, password, isSignUp))
     }
 }
 

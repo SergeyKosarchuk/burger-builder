@@ -3,7 +3,7 @@ import axios from '../../axios-orders';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import { addIngredient, deleteIngredient, initIngredients } from '../../store/actions';
+import { addIngredient, deleteIngredient, initIngredients } from '../../store/BurgerBuilder/actions';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
@@ -81,10 +81,10 @@ const dispatchStateToProps = dispatch => {
 
 const mapStateToProps = state => {
     return {
-        isLoading: state.ingredientsIsLoading,
-        isError: state.ingredientsIsLoadingError,
-        totalPrice: state.totalPrice,
-        ingredients: state.ingredients,
+        isLoading: state.burgerBuilder.isLoading,
+        isError: !!state.burgerBuilder.error,
+        totalPrice: state.burgerBuilder.totalPrice,
+        ingredients: state.burgerBuilder.ingredients,
     }
 }
 
