@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 
 import { Input } from '../../components/UI/Input/Input';
+import Spinner from '../../components/UI/Spinner/Spiner';
 import Button, { ACCEPT_TYPE } from '../../components/UI/Button/Button';
 import * as actions from '../../store/actions';
 
@@ -60,6 +61,10 @@ class Auth extends React.Component {
         const { email, password, disabled, isSignUp} = this.state;
         const switchMessage = isSignUp ? 'SIGN IN' : 'SIGN UP';
 
+        if ( this.props.isLoading ){
+            return <Spinner />
+        }
+
         return (
             <StyledAuth>
                 <form>
@@ -73,10 +78,16 @@ class Auth extends React.Component {
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        isLoading: state.isLoading,
+    }
+}
+
 const mapDispatchToProps = dispatch => {
     return {
         authenticate: (email, password, isSignUp) => dispatch(actions.authanticate(email, password, isSignUp))
     }
 }
 
-export default connect(null, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

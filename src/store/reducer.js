@@ -81,19 +81,29 @@ const fetchIngredientsError = (state) => {
     return newState;
 }
 
-const authStart = state => ({...state, isLoading: true});
-const authSuccsess = (state, action) => {
-    return {
-        ...state,
-        token: action.token,
-        userId: action.userId,
-        error: null,
-        isLoading:
-        false
-    };
+const authStart = state => {
+    const newState = copyState(state);
+    newState.isLoading = true;
+    return newState;
 }
+
+const authSuccsess = (state, action) => {
+    const newState = copyState(state);
+    newState.token = action.token;
+    newState.userId = action.userId;
+    newState.error = action.error;
+    newState.isLoading = false;
+    return newState;
+}
+
+
+
 const authFailed = (state, action) => {
-    return {...state, token: null, error: action.error, isLoading: false};
+    const newState = copyState(state);
+    newState.token = null;
+    newState.error = action.error;
+    newState.isLoading = false;
+    return newState;
 }
 
 const reducer = (state = initialState, action) => {
