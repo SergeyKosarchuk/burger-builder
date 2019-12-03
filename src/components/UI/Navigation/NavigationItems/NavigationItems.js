@@ -21,5 +21,6 @@ export default function navigationItems (props) {
     <NavigationItems>
         <NavigationItem link="/">Burger Builder</NavigationItem>
         <NavigationItem link="/orders">Orders</NavigationItem>
+        <NavigationItem link='/registration'>Registration</NavigationItem>
     </NavigationItems>)
 }
