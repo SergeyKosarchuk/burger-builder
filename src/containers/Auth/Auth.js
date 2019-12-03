@@ -1,8 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
 import { Input } from '../../components/UI/Input/Input';
 import Button, { ACCEPT_TYPE } from '../../components/UI/Button/Button';
+import * as actions from '../../store/actions';
+import { tsImportEqualsDeclaration } from '@babel/types';
 
 const StyledAuth = styled.div`
     margin: 20px auto;
@@ -19,15 +22,16 @@ const StyledAuth = styled.div`
 `;
 
 
-export default class Auth extends React.Component {
+class Auth extends React.Component {
     state = {
         email: '',
         password: '',
         disabled: true,
     }
 
-    authHandler = () => {
-        console.log(this.state);
+    authHandler = (event) => {
+        event.preventDefault();
+        this.props.authenticate(this.state.email, this.state.password);
     }
 
     handleInput = (event) => {
@@ -60,3 +64,11 @@ export default class Auth extends React.Component {
         );
     }
 }
+
+const mapDispatchToProps = dispatch => {
+    return {
+        authenticate: (email, password) => dispatch(actions.authanticate(email, password))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Auth);
