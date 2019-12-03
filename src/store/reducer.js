@@ -3,7 +3,11 @@ import {
     DELETE_INGREDIENT,
     SET_INGREDIENTS,
     FETCH_INGREDIENTS,
-    FETCH_INGREDIENTS_ERROR } from './actions'
+    FETCH_INGREDIENTS_ERROR,
+    AUTH_START,
+    AUTH_FAILED,
+    AUTH_SUCCSESS
+} from './actions'
 import { SALAD, CHEESE, BACON, MEAT } from '../consts/ingredients';
 
 const initialState = {
@@ -16,7 +20,11 @@ const initialState = {
         [CHEESE]: 2,
         [BACON]: 3,
         [MEAT]: 4
-    }
+    },
+    token: null,
+    userId: null,
+    error: null,
+    isLoading: false,
 };
 
 const calculateTotalPrice = (ingredients, ingredientPrices) => {
@@ -73,20 +81,32 @@ const fetchIngredientsError = (state) => {
     return newState;
 }
 
+const authStart = state => ({...state, isLoading: true});
+const authSuccsess = (state, action) => {
+    return {
+        ...state,
+        token: action.token,
+        userId: action.userId,
+        error: null,
+        isLoading:
+        false
+    };
+}
+const authFailed = (state, action) => {
+    return {...state, token: null, error: action.error, isLoading: false};
+}
+
 const reducer = (state = initialState, action) => {
     switch ( action.type ) {
-        case ADD_INGREDIENT:
-            return addIngedient(state, action.ingredient);
-        case DELETE_INGREDIENT:
-            return deleteIngredient(state, action.ingredient);
-        case SET_INGREDIENTS:
-            return setIngredients(state, action.ingredients);
-        case FETCH_INGREDIENTS:
-            return fetchIngredients(state);
-        case FETCH_INGREDIENTS_ERROR:
-            return fetchIngredientsError(state);
-        default:
-            return state;
+        case ADD_INGREDIENT: return addIngedient(state, action.ingredient);
+        case DELETE_INGREDIENT: return deleteIngredient(state, action.ingredient);
+        case SET_INGREDIENTS: return setIngredients(state, action.ingredients);
+        case FETCH_INGREDIENTS: return fetchIngredients(state);
+        case FETCH_INGREDIENTS_ERROR: return fetchIngredientsError(state);
+        case AUTH_START: return authStart(state, action);
+        case AUTH_SUCCSESS: return authSuccsess(state, action);
+        case AUTH_FAILED: return authFailed(state, action);
+        default: return state;
     }
 }
 

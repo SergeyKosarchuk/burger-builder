@@ -16,7 +16,7 @@ const Button = styled.button`
 `;
 
 export default function button ( {clicked, type, children, disabled} ) {
-    let color = type === ACCEPT_TYPE ? 'green' : 'read';
+    let color = type === ACCEPT_TYPE ? 'green' : 'red';
     let pointer = 'pointer';
 
     if (disabled){

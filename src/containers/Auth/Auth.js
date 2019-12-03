@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { Input } from '../../components/UI/Input/Input';
 import Button, { ACCEPT_TYPE } from '../../components/UI/Button/Button';
 import * as actions from '../../store/actions';
-import { tsImportEqualsDeclaration } from '@babel/types';
 
 const StyledAuth = styled.div`
     margin: 20px auto;
@@ -27,11 +26,14 @@ class Auth extends React.Component {
         email: '',
         password: '',
         disabled: true,
+        isSignUp: true,
     }
 
     authHandler = (event) => {
+        const { email, password, isSignUp } = this.state
+
         event.preventDefault();
-        this.props.authenticate(this.state.email, this.state.password);
+        this.props.authenticate(email, password, isSignUp);
     }
 
     handleInput = (event) => {
@@ -50,8 +52,13 @@ class Auth extends React.Component {
         })
     }
 
+    switchAuthModeHandler = (prevState) => {
+        this.setState(prevState => ({isSignUp: !prevState.isSignUp}));
+    }
+
     render () {
-        const { email, password, disabled} = this.state;
+        const { email, password, disabled, isSignUp} = this.state;
+        const switchMessage = isSignUp ? 'SIGN IN' : 'SIGN UP';
 
         return (
             <StyledAuth>
@@ -60,6 +67,7 @@ class Auth extends React.Component {
                     <Input value={password} fieldName='password' onChange={this.handleInput} placeholder='Password'/>
                     <Button type={ACCEPT_TYPE} clicked={this.authHandler} disabled={disabled}>SUBMIT</Button>
                 </form>
+            <Button clicked={this.switchAuthModeHandler}>SWITCH TO {switchMessage}</Button>
             </StyledAuth>
         );
     }
@@ -67,7 +75,7 @@ class Auth extends React.Component {
 
 const mapDispatchToProps = dispatch => {
     return {
-        authenticate: (email, password) => dispatch(actions.authanticate(email, password))
+        authenticate: (email, password, isSignUp) => dispatch(actions.authanticate(email, password, isSignUp))
     }
 }
 
