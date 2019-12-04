@@ -25,13 +25,13 @@ const Nav = styled.nav`
     }
 `;
 
-export default function toolbar ({ menuOpened }) {
+export default function toolbar ({ menuOpened, isAuthenticated }) {
     return (
         <Toolbar>
             <SideDrawerToogle clicked={menuOpened} />
             <Logo/>
             <Nav>
-                <NavigationItems />
+                <NavigationItems isAuthenticated={isAuthenticated}/>
             </Nav>
         </Toolbar>
     );

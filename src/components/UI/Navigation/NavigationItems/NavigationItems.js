@@ -17,10 +17,19 @@ const NavigationItems = styled.ul`
 `;
 
 export default function navigationItems (props) {
+    let authLink = null;
+
+    if (props.isAuthenticated){
+        authLink = <NavigationItem link='/logout'>Log out</NavigationItem>;
+    }
+    else {
+        authLink = <NavigationItem link='/registration'>Registration</NavigationItem>
+    }
+
     return (
     <NavigationItems>
         <NavigationItem link="/">Burger Builder</NavigationItem>
         <NavigationItem link="/orders">Orders</NavigationItem>
-        <NavigationItem link='/registration'>Registration</NavigationItem>
+        {authLink}
     </NavigationItems>)
 }

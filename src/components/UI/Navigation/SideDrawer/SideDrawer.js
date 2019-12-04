@@ -28,14 +28,14 @@ const LogoWrapper = styled.div`
     margin-bottom: 32px;
 `;
 
-export default function sideDrawer ({isOpen, closed}) {
+export default function sideDrawer ({isOpen, closed, isAuthenticated}) {
     return (
         <>
             <Backdrop show={isOpen} clicked={closed}/>
             <SideDrawer isOpen={isOpen}>
             <LogoWrapper><Logo/></LogoWrapper>
             <nav>
-                <NavigationItems />
+                <NavigationItems isAuthenticated={isAuthenticated}/>
             </nav>
             </SideDrawer>
         </>
