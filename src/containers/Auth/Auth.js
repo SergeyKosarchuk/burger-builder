@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import { Input } from '../../components/UI/Input/Input';
 import Spinner from '../../components/UI/Spinner/Spiner';
@@ -66,6 +67,10 @@ class Auth extends React.Component {
             return <Spinner />
         }
 
+        if ( this.props.isAuthenticated ){
+            return <Redirect to='/'/>
+        }
+
         if ( this.props.error) {
             errorMessage = <p>{this.props.error}</p>;
         }
@@ -88,6 +93,7 @@ const mapStateToProps = state => {
     return {
         isLoading: state.auth.isLoading,
         error: state.auth.error,
+        isAuthenticated: !!state.auth.token,
     }
 }
 

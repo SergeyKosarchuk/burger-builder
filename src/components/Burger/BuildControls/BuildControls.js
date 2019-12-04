@@ -47,16 +47,22 @@ const controls = [
 ];
 
 export default function buildControls (props) {
+    const disabled = !(props.ingredientsSelected && props.isAuthenticated);
+    const buttonMessage = props.isAuthenticated ? 'ORDER NOW' : 'SIGN IN TO ORDER';
+    const buildControls = controls.map(control => (
+        <BuildControl
+                    key={control.type}
+                    label={control.label}
+                    added={() => props.ingredientAdded(control.type)}
+                    removed={() => props.ingredientRemoved(control.type)}
+                    disabled={props.disabled.includes(control.type)} />
+    ))
+
     return (
         <BuildControls>
             <p>Current price: <strong>{props.price}</strong></p>
-            {controls.map((control) => <BuildControl key={control.type}
-                                                     label={control.label}
-                                                     added={() => props.ingredientAdded(control.type)}
-                                                     removed={() => props.ingredientRemoved(control.type)}
-                                                     disabled={props.disabled.includes(control.type)}
-            />)}
-            <OrderButton disabled={!props.canCompleteOrder} onClick={props.orderCompleteHandler}>ORDER NOW</OrderButton>
+            {buildControls}
+            <OrderButton disabled={disabled} onClick={props.orderCompleteHandler}>{buttonMessage}</OrderButton>
         </BuildControls>
     );
 }

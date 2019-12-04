@@ -17,19 +17,15 @@ const NavigationItems = styled.ul`
 `;
 
 export default function navigationItems (props) {
-    let authLink = null;
+    const links = [<NavigationItem key='/' link='/'>Burger Builder</NavigationItem>];
 
     if (props.isAuthenticated){
-        authLink = <NavigationItem link='/logout'>Log out</NavigationItem>;
+        links.push(<NavigationItem key='/orders' link='/orders'>Orders</NavigationItem>);
+        links.push(<NavigationItem key='/logout' link='/logout'>Log out</NavigationItem>);
     }
     else {
-        authLink = <NavigationItem link='/registration'>Registration</NavigationItem>
+        links.push(<NavigationItem key='/registration' link='/registration'>Registration</NavigationItem>);
     }
 
-    return (
-    <NavigationItems>
-        <NavigationItem link="/">Burger Builder</NavigationItem>
-        <NavigationItem link="/orders">Orders</NavigationItem>
-        {authLink}
-    </NavigationItems>)
-}
+    return <NavigationItems>{links}</NavigationItems>;
+};

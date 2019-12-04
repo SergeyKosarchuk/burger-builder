@@ -2,7 +2,7 @@ import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
 import Layout from "./containers/Layout/Layout";
-import BurgerBuilder from "./containers/BurgerBuildier/BurderBuilder";
+import BurgerBuilder from "./containers/BurgerBuilder/BurderBuilder";
 import Checkout from './containers/Checkout/Checkout';
 import Orders from './containers/Orders/Orders';
 import Auth from './containers/Auth/Auth';

@@ -18,7 +18,12 @@ class BurgerBuilder extends React.Component{
     };
 
     orderCompleteHandler = () => {
-        this.setState({showOrderConfirm: true})
+        if (this.props.isAuthenticated){
+            this.setState({showOrderConfirm: true})
+        } else {
+            this.history.push({pathname: '/registration'})
+        }
+
     };
 
     orderCancelHandler = () => {
@@ -43,9 +48,8 @@ class BurgerBuilder extends React.Component{
         const showOrderConfirm = this.state.showOrderConfirm;
         const { ingredients, totalPrice, isLoading } = this.props;
         const disabledIngredients = Object.keys(ingredients).filter((ing) => ingredients[ing] <= 0);
-        const canCompleteOrder = !!Object.values(ingredients).reduce(
+        const ingredientsSelected = !!Object.values(ingredients).reduce(
             (previousValue, currentItem) => previousValue + currentItem, 0);
-
         let orderSummery = <OrderSummary ingredients={ingredients}
                                          totalPrice={totalPrice ? totalPrice.toFixed(2) : null}
                                          acceptClicked={this.orderAcceptClickedHandler}
@@ -65,8 +69,9 @@ class BurgerBuilder extends React.Component{
                                ingredientRemoved={this.props.deleteIngredient}
                                disabled={disabledIngredients}
                                price={totalPrice ? totalPrice.toFixed(2) : null}
-                               canCompleteOrder={canCompleteOrder}
+                               ingredientsSelected={ingredientsSelected}
                                orderCompleteHandler={this.orderCompleteHandler}
+                               isAuthenticated={this.props.isAuthenticated}
                 />
             </>
         )
@@ -88,6 +93,7 @@ const mapStateToProps = state => {
         totalPrice: state.burgerBuilder.totalPrice,
         ingredients: state.burgerBuilder.ingredients,
         needFetchIngredients: state.burgerBuilder.needFetchIngredients,
+        isAuthenticated: !!state.auth.token,
     };
 };
 
