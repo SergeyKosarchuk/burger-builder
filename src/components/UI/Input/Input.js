@@ -56,11 +56,11 @@ const Select = (props) => {
 function makeInput (fieldName, fieldType , fieldOptions, changed, hasError, value) {
     switch (fieldType) {
         case 'input':
-            return <Input key={fieldName} {...fieldOptions} onChange={changed} name={fieldName} hasError={hasError} value={value}/>
+            return <Input key={fieldName} {...fieldOptions} onChange={changed} fieldName={fieldName} hasError={hasError} value={value}/>
         case 'select':
-            return <Select key={fieldName} {...fieldOptions} onChange={changed} name={fieldName} hasError={hasError} value={value}/>
+            return <Select key={fieldName} {...fieldOptions} onChange={changed} fieldName={fieldName} hasError={hasError} value={value}/>
         default:
-            return <Input key={fieldName} {...fieldOptions} onChange={changed} name={fieldName} hasError={hasError} value={value}/>;
+            return <Input key={fieldName} {...fieldOptions} onChange={changed} fieldName={fieldName} hasError={hasError} value={value}/>;
     }
 }
 
