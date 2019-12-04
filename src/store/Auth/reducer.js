@@ -1,4 +1,4 @@
-import { AUTH_START, AUTH_FAILED, AUTH_SUCCSESS } from './actions'
+import { AUTH_START, AUTH_FAILED, AUTH_SUCCSESS, AUTH_LOGOUT } from './actions'
 
 const initialState = {
     token: null,
@@ -23,11 +23,18 @@ const authFailed = (state, action) => ({
     isLoading: false
 });
 
+const authLogout = (state, logout) => ({
+    ...state,
+    token: null,
+    userId: null
+});
+
 const reducer = (state = initialState, action) => {
     switch ( action.type ) {
         case AUTH_START: return authStart(state, action);
         case AUTH_SUCCSESS: return authSuccsess(state, action);
         case AUTH_FAILED: return authFailed(state, action);
+        case AUTH_LOGOUT: return authLogout(state, action);
         default: return state;
     }
 }

@@ -8,10 +8,12 @@ import {
 export const AUTH_START = 'AUTH_START';
 export const AUTH_SUCCSESS = 'AUTH_SUCCSESS';
 export const AUTH_FAILED = 'AUTH_FAIL';
+export const AUTH_LOGOUT = 'AUTH_LOGOUT';
 
 const authStart = () => ({type: AUTH_START});
 const authFailed = error => ({type: AUTH_FAILED, error: error});
 const authSuccsess = (token, userId) => ({type: AUTH_SUCCSESS, token: token, userId: userId});
+export const logout = () => ({type: AUTH_LOGOUT});
 
 export const authenticate = (email, password, isSignUp) => {
     return dispatch => {
@@ -37,9 +39,16 @@ export const authenticate = (email, password, isSignUp) => {
             const token = response.data.idToken;
             const userId = response.data.localId;
             dispatch(authSuccsess(token, userId));
+            dispatch(checkAuthTimeout(response.data.expiresIn));
         })
         .catch(error => {
             dispatch(authFailed(error.response.data.error.message));
         });
     }
 }
+
+export const checkAuthTimeout = expiresInSeconds => {
+    return dispatch => {
+        setTimeout(() => dispatch(logout()), expiresInSeconds * 1000);
+    }
+};
