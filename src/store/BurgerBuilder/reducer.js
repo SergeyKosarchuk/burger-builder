@@ -18,6 +18,7 @@ const initialState = {
         [BACON]: 3,
         [MEAT]: 4
     },
+    needFetchIngredients: true,
 };
 
 const calculateTotalPrice = (ingredients, ingredientPrices) => {
@@ -58,6 +59,7 @@ const setIngredients = (state, ingredients) => {
     const newState = copyState(state);
     newState.ingredients = ingredients;
     newState.isLoading = false;
+    newState.needFetchIngredients = false;
     return newState;
 }
 

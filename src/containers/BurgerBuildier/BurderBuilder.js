@@ -30,11 +30,13 @@ class BurgerBuilder extends React.Component{
     }
 
     orderCancelClickedHandler = () => {
-        this.setState({showOrderConfirm: false})
+        this.setState({showOrderConfirm: false});
     }
 
     componentDidMount () {
-        this.props.initIngredients()
+        if (this.props.needFetchIngredients){
+            this.props.initIngredients();
+        }
     }
 
     render(){
@@ -76,8 +78,8 @@ const dispatchStateToProps = dispatch => {
         addIngredient: (ingredient) => dispatch(addIngredient(ingredient)),
         deleteIngredient: (ingredient) => dispatch(deleteIngredient(ingredient)),
         initIngredients: () => dispatch(initIngredients())
-    }
-}
+    };
+};
 
 const mapStateToProps = state => {
     return {
@@ -85,8 +87,9 @@ const mapStateToProps = state => {
         isError: !!state.burgerBuilder.error,
         totalPrice: state.burgerBuilder.totalPrice,
         ingredients: state.burgerBuilder.ingredients,
-    }
-}
+        needFetchIngredients: state.burgerBuilder.needFetchIngredients,
+    };
+};
 
 export default connect(
     mapStateToProps,
