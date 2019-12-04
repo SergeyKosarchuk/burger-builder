@@ -60,14 +60,20 @@ class Auth extends React.Component {
     render () {
         const { email, password, disabled, isSignUp} = this.state;
         const switchMessage = isSignUp ? 'SIGN IN' : 'SIGN UP';
+        let errorMessage = null;
 
         if ( this.props.isLoading ){
             return <Spinner />
         }
 
+        if ( this.props.error) {
+            errorMessage = <p>{this.props.error}</p>;
+        }
+
         return (
             <StyledAuth>
                 <form>
+                    {errorMessage}
                     <Input value={email} fieldName='email' onChange={this.handleInput} placeholder='Email'/>
                     <Input value={password} fieldName='password' onChange={this.handleInput} placeholder='Password'/>
                     <Button type={ACCEPT_TYPE} clicked={this.authHandler} disabled={disabled}>SUBMIT</Button>
@@ -81,6 +87,7 @@ class Auth extends React.Component {
 const mapStateToProps = state => {
     return {
         isLoading: state.auth.isLoading,
+        error: state.auth.error,
     }
 }
 

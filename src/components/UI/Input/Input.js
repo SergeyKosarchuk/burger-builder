@@ -8,12 +8,6 @@ const InputWrapper = styled.div`
     box-sizing: border-box;
 `;
 
-const Label = styled.label`
-    font-weight: bold;
-    display: block;
-    margin-bottom: 8px;
-`;
-
 const styledInput = css`
     outline: none;
     border: 1px solid;
@@ -44,7 +38,6 @@ const Option = styled.option``;
 const Input = (props) => {
     return (
         <InputWrapper>
-            <Label>{props.fieldName}</Label>
             <StyledInput {...props} name={props.fieldName}/>
         </InputWrapper>
     );
@@ -55,7 +48,6 @@ const Select = (props) => {
 
     return (
         <InputWrapper>
-            <Label>{props.fieldName}</Label>
             <StyledSelect {...props}>{options}</StyledSelect>
         </InputWrapper>
     );
