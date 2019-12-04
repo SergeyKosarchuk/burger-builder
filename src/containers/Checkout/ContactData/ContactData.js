@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 
 import axios from '../../../axios-orders';
 import Button, { ACCEPT_TYPE } from '../../../components/UI/Button/Button';
@@ -45,7 +46,7 @@ const StyledContactData = styled.div`
     }
 `;
 
-export default class ContactData extends React.Component {
+class ContactData extends React.Component {
     state = {
         name: '',
         email: '',
@@ -123,7 +124,7 @@ export default class ContactData extends React.Component {
             },
             created: new Date().toISOString()
         }
-        axios.post('orders/.json', order)
+        axios.post(`orders/.json?auth=${this.props.token}`, order)
             .then((result) => {
                 this.setState({isLoading: false})
                 this.props.onComplete()
@@ -173,3 +174,7 @@ export default class ContactData extends React.Component {
         );
     }
 }
+
+const mapStateToProps = state => ({token: state.auth.token});
+
+export default connect(mapStateToProps, null)(ContactData);
