@@ -47,7 +47,6 @@ const controls = [
 ];
 
 export default function buildControls (props) {
-    const disabled = !(props.ingredientsSelected && props.isAuthenticated);
     const buttonMessage = props.isAuthenticated ? 'ORDER NOW' : 'SIGN IN TO ORDER';
     const buildControls = controls.map(control => (
         <BuildControl
@@ -62,7 +61,11 @@ export default function buildControls (props) {
         <BuildControls>
             <p>Current price: <strong>{props.price}</strong></p>
             {buildControls}
-            <OrderButton disabled={disabled} onClick={props.orderCompleteHandler}>{buttonMessage}</OrderButton>
+            <OrderButton
+                disabled={!props.ingredientsSelected}
+                onClick={props.orderCompleteHandler}
+                >{buttonMessage}
+            </OrderButton>
         </BuildControls>
     );
 }

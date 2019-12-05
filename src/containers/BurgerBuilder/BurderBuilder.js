@@ -21,7 +21,7 @@ class BurgerBuilder extends React.Component{
         if (this.props.isAuthenticated){
             this.setState({showOrderConfirm: true})
         } else {
-            this.history.push({pathname: '/registration'})
+            this.props.history.push({pathname: '/registration'})
         }
 
     };
