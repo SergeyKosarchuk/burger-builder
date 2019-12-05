@@ -115,6 +115,7 @@ class ContactData extends React.Component {
             ingredients: this.props.ingredients,
             totalPrice: this.props.totalPrice,
             customer: {
+                userId: this.props.userId,
                 name: this.state.name,
                 address: {
                     street: this.state.street,
@@ -175,6 +176,6 @@ class ContactData extends React.Component {
     }
 }
 
-const mapStateToProps = state => ({token: state.auth.token});
+const mapStateToProps = state => ({token: state.auth.token, userId: state.auth.userId});
 
 export default connect(mapStateToProps, null)(ContactData);

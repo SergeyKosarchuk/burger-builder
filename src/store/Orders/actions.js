@@ -9,11 +9,11 @@ const fetchOrdres = () => ({type: FETCH_ORDERS});
 const fetchOrdersSuccsess = data => ({type: FETCH_ORDERS_SUCCSESS, data: data});
 const fetchOrdersError = error => ({type: FETCH_ORDERS_ERROR, error: error});
 
-export const fetchOrders = token => {
+export const fetchOrders = (token, userId) => {
     return dispatch => {
         dispatch(fetchOrdres());
-        const url = token ? ORDERS_URL + `?auth=${token}` : ORDERS_URL;
-        axios.get(url)
+        const queryParams = `?auth=${token}&orderBy="customer/userId"&equalTo="${userId}"`
+        axios.get(ORDERS_URL + queryParams)
         .then(response => {
             dispatch(fetchOrdersSuccsess(response.data));
         })

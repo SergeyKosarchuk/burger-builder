@@ -10,7 +10,7 @@ import { fetchOrders } from '../../store/Orders/actions';
 class Orders extends React.Component {
     componentDidMount () {
         if (this.props.needFetchOrders){
-            this.props.fetchOrders(this.props.token)
+            this.props.fetchOrders(this.props.token, this.props.userId);
         }
     }
 
@@ -37,13 +37,14 @@ class Orders extends React.Component {
 
 const mapStateToProps = state => ({
     token: state.auth.token,
+    userId: state.auth.userId,
     orders: state.orders.orders,
     error: state.orders.error,
     isLoading: state.orders.isLoading,
     needFetchOrders: state.orders.needFetchOrders});
 const mapDispatchToProps = dispatch => {
     return {
-        fetchOrders: token => dispatch(fetchOrders(token))
+        fetchOrders: (token, userId) => dispatch(fetchOrders(token, userId))
     };
 };
 
