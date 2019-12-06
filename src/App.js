@@ -10,7 +10,7 @@ import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
 import { authCheckState } from './store/Auth/actions';
 
-class App extends React.Component{
+export class App extends React.Component{
 
     componentDidMount () {
         this.props.authCheckState();
