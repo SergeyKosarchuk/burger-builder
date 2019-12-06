@@ -12,7 +12,7 @@ const authSuccsess = (state, action) => ({
     ...state,
     token: action.token,
     userId: action.userId,
-    error: action.error,
+    error: null,
     isLoading: false,
 });
 
