@@ -12,7 +12,7 @@ import Spiner from '../../components/UI/Spinner/Spiner';
 import withErrorHandler from '../withErrorHandler/withErrorHandler';
 
 
-class BurgerBuilder extends React.Component{
+export class BurgerBuilder extends React.Component{
     state = {
         showOrderConfirm: false,
     };

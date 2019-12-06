@@ -8,7 +8,7 @@ describe('<NavigationItems ./>', () => {
     let wrapper = null;
 
     beforeEach(() => {
-        wrapper = shallow(<NavigationItems />)
+        wrapper = shallow(<NavigationItems />);
     });
 
     it('should render two <NavigationItem /> elements if not authenticated', () => {
@@ -24,4 +24,4 @@ describe('<NavigationItems ./>', () => {
         wrapper.setProps({isAuthenticated: true})
         expect(wrapper.contains(<NavigationItem link='/logout'>Logout</NavigationItem>)).toEqual(true);
     })
-})
+});
