@@ -11,7 +11,9 @@ const rootReducer = combineReducers({
     orders: orderReducer,
 })
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const reduxExt = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+const composeEnhancers = (process.env.NODE_ENV === 'development' && reduxExt) ? reduxExt : compose;
+
 const store = createStore(
     rootReducer, composeEnhancers(applyMiddleware(thunk))
 );
