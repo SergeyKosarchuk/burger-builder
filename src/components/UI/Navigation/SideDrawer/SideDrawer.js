@@ -32,7 +32,7 @@ export default function sideDrawer ({isOpen, closed, isAuthenticated}) {
     return (
         <>
             <Backdrop show={isOpen} clicked={closed}/>
-            <SideDrawer isOpen={isOpen}>
+            <SideDrawer isOpen={isOpen} onClick={closed}>
             <LogoWrapper><Logo/></LogoWrapper>
             <nav>
                 <NavigationItems isAuthenticated={isAuthenticated}/>
