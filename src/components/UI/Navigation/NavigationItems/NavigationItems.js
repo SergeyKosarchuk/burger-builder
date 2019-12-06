@@ -21,7 +21,7 @@ export default function navigationItems (props) {
 
     if (props.isAuthenticated){
         links.push(<NavigationItem key='/orders' link='/orders'>Orders</NavigationItem>);
-        links.push(<NavigationItem key='/logout' link='/logout'>Log out</NavigationItem>);
+        links.push(<NavigationItem key='/logout' link='/logout'>Logout</NavigationItem>);
     }
     else {
         links.push(<NavigationItem key='/registration' link='/registration'>Registration</NavigationItem>);
