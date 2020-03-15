@@ -1,6 +1,5 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
 
 import Layout from "./containers/Layout/Layout";
 import BurgerBuilder from "./containers/BurgerBuilder/BurderBuilder";
@@ -8,47 +7,49 @@ import Checkout from './containers/Checkout/Checkout';
 import Orders from './containers/Orders/Orders';
 import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
-import { authCheckState } from './store/Auth/actions';
-import { RootState } from './store/store';
+import { observer } from 'mobx-react';
+import rootStoreContext from './context/rootStoreContext';
 
-interface AppStoreProps {
-    isAuthenticated: boolean
-}
-
-interface AppDispatchProps {
-    authCheckState(): void
-}
-
-interface AppProps extends AppStoreProps, AppDispatchProps {
-
-}
-
-export class App extends React.Component<AppProps>{
+@observer
+export class App extends React.Component {
+    static contextType = rootStoreContext;
+    context!: React.ContextType<typeof rootStoreContext>;
 
     componentDidMount () {
-        this.props.authCheckState();
+        this.context.authStore.authCheckState();
+    }
+
+    renderAuthenticated () {
+        return (
+        <div>
+            <Route key='/checkout' path='/checkout'><Checkout /></Route>
+            <Route key='/orders' path='/orders'> <Orders /></Route>
+            <Route key='/' path='/' exact><BurgerBuilder /></Route>
+            <Route key='/logout' path='/logout'>
+                <Logout onLogout={() => this.context.authStore.logout()}/>
+            </Route>
+            <Redirect key='redirect' to='/' />
+        </div>);
+    }
+
+    renderUnAuthenticated () {
+        return (
+        <div>
+            <Route key='/' path='/' exact><BurgerBuilder /></Route>
+            <Route key='/registration' path='/registration'><Auth/></Route>
+            <Redirect key='redirect' to='/' />
+        </div>
+        );
     }
 
     render () {
-        const unAuthenticatedRoutes = [
-            <Route key='/' path='/' exact><BurgerBuilder /></Route>,
-            <Route key='/registration' path='/registration'><Auth /></Route>,
-            <Redirect key='redirect' to='/' />
-        ]
-
-        const authenticatedRoutes = [
-            <Route key='/checkout' path='/checkout'><Checkout /></Route>,
-            <Route key='/orders' path='/orders'><Orders /></Route>,
-            <Route key='/' path='/' exact><BurgerBuilder /></Route>,
-            <Route key='/logout' path='/logout'><Logout /></Route>,
-            <Redirect key='redirect' to='/' />
-        ]
+        const isAuthenticated = this.context.authStore.isAuthenticated;
 
         return (
             <div>
                 <Layout>
                     <Switch>
-                        {this.props.isAuthenticated ? authenticatedRoutes : unAuthenticatedRoutes}
+                        {isAuthenticated ? this.renderAuthenticated() : this.renderUnAuthenticated()}
                     </Switch>
                 </Layout>
             </div>
@@ -56,11 +57,4 @@ export class App extends React.Component<AppProps>{
     }
 }
 
-const mapStateToProps = (state: RootState): AppStoreProps => ({isAuthenticated: !!state.auth.token});
-
-const mapDispatchToProps = (dispatch: any) => ({
-    authCheckState: () => dispatch(authCheckState())
-});
-
-export default connect<AppStoreProps, AppDispatchProps, {}, RootState>
-(mapStateToProps, mapDispatchToProps)(App);
+export default App;

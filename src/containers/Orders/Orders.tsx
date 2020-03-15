@@ -1,41 +1,39 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import { observer } from 'mobx-react';
 
 import axios from '../../axios-orders';
 import Order from '../../components/Order/Order';
 import Spinner from '../../components/UI/Spinner/Spiner';
 import withErrorHandler from '../withErrorHandler/withErrorHandler';
-import { fetchOrders } from '../../store/Orders/actions';
+import rootStoreContext from '../../context/rootStoreContext';
+import {
+    NOT_UPLOADED,
+    LOADING,
+    ERROR
+} from '../../store/OrdersStore/consts';
 import IOrder from '../../types/order';
-import { RootState } from '../../store/store';
 
-interface IOrdersProps {
-    needFetchOrders: boolean,
-    fetchOrders(token: string, userId: string): void,
-    token: string,
-    userId: string,
-    isLoading: boolean,
-    error: string | null,
-    orders: IOrder[]
-}
+@observer
+class Orders extends React.Component<{}, {}> {
+    static contextType = rootStoreContext;
+    context!: React.ContextType<typeof rootStoreContext>
 
-class Orders extends React.Component<IOrdersProps> {
     componentDidMount () {
-        if (this.props.needFetchOrders){
-            this.props.fetchOrders(this.props.token, this.props.userId);
+        if (this.context.ordersStore.state === NOT_UPLOADED){
+            this.context.ordersStore.fetchOrders();
         }
     }
 
     render () {
-        if (this.props.isLoading) {
+        if (this.context.ordersStore.state === LOADING) {
             return <Spinner />
         }
 
-        if (this.props.error) {
-            return <p>{this.props.error}</p>
+        if (this.context.ordersStore.state === ERROR) {
+            return <p>{this.context.ordersStore.error}</p>
         }
 
-        const orders = this.props.orders.map(order => (
+        const orders = this.context.ordersStore.orders.map((order: IOrder) => (
             <Order key={order.id}
                    totalPrice={order.totalPrice}
                    ingredients={order.ingredients}/>
@@ -47,21 +45,4 @@ class Orders extends React.Component<IOrdersProps> {
     }
 }
 
-const mapStateToProps = (state: RootState) => ({
-    token: state.auth.token,
-    userId: state.auth.userId,
-    orders: state.orders.orders,
-    error: state.orders.error,
-    isLoading: state.orders.isLoading,
-    needFetchOrders: state.orders.needFetchOrders});
-const mapDispatchToProps = (dispatch: any) => {
-    return {
-        fetchOrders: (token: string, userId: string) => dispatch(
-            fetchOrders(token, userId))
-    };
-};
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(withErrorHandler(Orders, axios));
+export default (withErrorHandler(Orders, axios));
