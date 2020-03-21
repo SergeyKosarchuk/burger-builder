@@ -52,7 +52,7 @@ export class App extends React.Component {
         return this.renderAuthenticated();
     }
 
-    return this.renderUnAuthenticated
+    return this.renderUnAuthenticated();
   }
 }
 
