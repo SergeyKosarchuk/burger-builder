@@ -7,50 +7,50 @@ import { observer } from 'mobx-react';
 import rootStoreContext from '../../context/rootStoreContext';
 
 const Main = styled.main`
-    margin-top: 72px;
+  margin-top: 72px;
 `;
 
 interface LayoutState {
-    isSideDrawerOpen: boolean
+  isSideDrawerOpen: boolean
 }
 
 @observer
 class Layout extends React.Component<{}, LayoutState>{
-    static contextType = rootStoreContext;
-    context!: React.ContextType<typeof rootStoreContext>;
+  static contextType = rootStoreContext;
+  context!: React.ContextType<typeof rootStoreContext>;
 
-    state = {
-        isSideDrawerOpen: false
-    }
+  state = {
+    isSideDrawerOpen: false
+  }
 
-    sideDrawerClosedHandler = () => {
-        this.setState({isSideDrawerOpen: false})
-    }
+  sideDrawerClosedHandler = () => {
+    this.setState({isSideDrawerOpen: false})
+  }
 
-    sideDrawOpenHandler = () => {
-        this.setState((prevState) => {
-            return { isSideDrawerOpen: !prevState.isSideDrawerOpen }
-        })
-    }
+  sideDrawOpenHandler = () => {
+    this.setState((prevState) => {
+      return { isSideDrawerOpen: !prevState.isSideDrawerOpen }
+    })
+  }
 
-    render(){
-        const isAuthenticated = this.context.authStore.isAuthenticated;
+  render(){
+    const isAuthenticated = this.context.authStore.isAuthenticated;
 
-        return (
-            <>
-                <Toolbar
-                    menuOpened={this.sideDrawOpenHandler}
-                    isAuthenticated={isAuthenticated}/>
-                <SideDrawer
-                    closed={this.sideDrawerClosedHandler}
-                    isOpen={this.state.isSideDrawerOpen}
-                    isAuthenticated={isAuthenticated}/>
-                <Main>
-                    {this.props.children}
-                </Main>
-            </>
-        )
-    }
+    return (
+      <>
+        <Toolbar
+          menuOpened={this.sideDrawOpenHandler}
+          isAuthenticated={isAuthenticated}/>
+        <SideDrawer
+          closed={this.sideDrawerClosedHandler}
+          isOpen={this.state.isSideDrawerOpen}
+          isAuthenticated={isAuthenticated}/>
+        <Main>
+          {this.props.children}
+        </Main>
+      </>
+    )
+  }
 }
 
 export default Layout;

@@ -5,7 +5,7 @@ const dbNameSpace = process.env.REACT_APP_FIREBASE_NAME_SPACE;
 const baseURL = `${dbURL}${dbNameSpace}`
 
 const instance = axios.create({
-    baseURL: baseURL,
+  baseURL: baseURL,
 });
 
 export default instance;

@@ -9,11 +9,11 @@ import rootStore from './store/store';
 import rootStoreContext from './context/rootStoreContext';
 
 ReactDOM.render(
-    <rootStoreContext.Provider value={rootStore}>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
-    </rootStoreContext.Provider>,
+  <rootStoreContext.Provider value={rootStore}>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </rootStoreContext.Provider>,
 document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

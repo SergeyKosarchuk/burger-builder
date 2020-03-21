@@ -13,82 +13,82 @@ import { NOT_UPLOADED } from '../../store/BurgerBuilderStore/consts';
 import { observer } from 'mobx-react';
 
 interface BurgerBuilderState {
-    showOrderConfirm: boolean,
+  showOrderConfirm: boolean,
 }
 
 @observer
 export class BurgerBuilder extends React.Component<RouteComponentProps, BurgerBuilderState> {
-    state = {
-        showOrderConfirm: false,
-    };
-    static contextType = rootStoreContext;
-    context!: React.ContextType<typeof rootStoreContext>
+  state = {
+    showOrderConfirm: false,
+  };
+  static contextType = rootStoreContext;
+  context!: React.ContextType<typeof rootStoreContext>
 
-    orderCompleteHandler = () => {
-        if (this.context.authStore.isAuthenticated){
-            this.setState({showOrderConfirm: true})
-        } else {
-            this.props.history.push({pathname: '/registration'})
-        }
-
-    };
-
-    orderCancelHandler = () => {
-        this.setState({showOrderConfirm: false});
+  orderCompleteHandler = () => {
+    if (this.context.authStore.isAuthenticated){
+      this.setState({showOrderConfirm: true})
+    } else {
+      this.props.history.push({pathname: '/registration'})
     }
 
-    orderAcceptClickedHandler = () => {
-        this.props.history.push({pathname: '/checkout'});
+  };
+
+  orderCancelHandler = () => {
+    this.setState({showOrderConfirm: false});
+  }
+
+  orderAcceptClickedHandler = () => {
+    this.props.history.push({pathname: '/checkout'});
+  }
+
+  orderCancelClickedHandler = () => {
+    this.setState({showOrderConfirm: false});
+  }
+
+  componentDidMount () {
+    if (this.context.burgerBuilderStore.state === NOT_UPLOADED){
+      this.context.burgerBuilderStore.fetchIngredients();
+    }
+  }
+
+  render(){
+    const showOrderConfirm = this.state.showOrderConfirm;
+    const {
+      ingredients,
+      totalPrice,
+      isLoading,
+      isIngredientsSelected,
+      addIngredient,
+      deleteIngredient,
+      disabledIngredients
+    } = this.context.burgerBuilderStore;
+    const isAuthenticated = this.context.authStore.isAuthenticated;
+    let orderSummery = <OrderSummary ingredients={ingredients}
+                     totalPrice={totalPrice}
+                     acceptClicked={this.orderAcceptClickedHandler}
+                     cancelClicked={this.orderCancelClickedHandler}/>
+
+    if (isLoading) {
+      orderSummery = <Spiner />
     }
 
-    orderCancelClickedHandler = () => {
-        this.setState({showOrderConfirm: false});
-    }
-
-    componentDidMount () {
-        if (this.context.burgerBuilderStore.state === NOT_UPLOADED){
-            this.context.burgerBuilderStore.fetchIngredients();
-        }
-    }
-
-    render(){
-        const showOrderConfirm = this.state.showOrderConfirm;
-        const {
-            ingredients,
-            totalPrice,
-            isLoading,
-            isIngredientsSelected,
-            addIngredient,
-            deleteIngredient,
-            disabledIngredients
-        } = this.context.burgerBuilderStore;
-        const isAuthenticated = this.context.authStore.isAuthenticated;
-        let orderSummery = <OrderSummary ingredients={ingredients}
-                                         totalPrice={totalPrice}
-                                         acceptClicked={this.orderAcceptClickedHandler}
-                                         cancelClicked={this.orderCancelClickedHandler}/>
-
-        if (isLoading) {
-            orderSummery = <Spiner />
-        }
-
-        return (
-            <>
-                <Modal show={showOrderConfirm} clicked={this.orderCancelHandler}>
-                    {orderSummery}
-                </Modal>
-                <Burger ingredients={ingredients}/>
-                <BuildControls ingredientAdded={addIngredient}
-                               ingredientRemoved={deleteIngredient}
-                               disabled={disabledIngredients}
-                               price={totalPrice}
-                               ingredientsSelected={isIngredientsSelected}
-                               orderCompleteHandler={this.orderCompleteHandler}
-                               isAuthenticated={isAuthenticated}
-                />
-            </>
-        )
-    }
+    return (
+      <>
+        <Modal show={showOrderConfirm} clicked={this.orderCancelHandler}>
+          {orderSummery}
+        </Modal>
+        <Burger ingredients={ingredients}/>
+        <BuildControls ingredientAdded={addIngredient}
+                 ingredientRemoved={deleteIngredient}
+                 disabled={disabledIngredients}
+                 price={totalPrice}
+                 ingredientsSelected={isIngredientsSelected}
+                 orderCompleteHandler={this.orderCompleteHandler}
+                 isAuthenticated={isAuthenticated}
+        />
+      </>
+    )
+  }
 }
 
 export default withRouter(withErrorHandler(BurgerBuilder, axios));

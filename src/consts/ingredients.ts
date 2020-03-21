@@ -8,4 +8,4 @@ export const BREAD_TOP = 'BREAD_TOP';
 export const BREAD_BOTTOM = 'BREAD_BOTTOM';
 
 export const SELECTABLE_INGREDIENTS: Ingredient[] = [
-    SALAD, CHEESE, BACON, MEAT];
+  SALAD, CHEESE, BACON, MEAT];

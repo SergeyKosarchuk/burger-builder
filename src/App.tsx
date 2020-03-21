@@ -12,48 +12,48 @@ import rootStoreContext from './context/rootStoreContext';
 
 @observer
 export class App extends React.Component {
-    static contextType = rootStoreContext;
-    context!: React.ContextType<typeof rootStoreContext>;
+  static contextType = rootStoreContext;
+  context!: React.ContextType<typeof rootStoreContext>;
 
-    componentDidMount () {
-        this.context.authStore.authCheckState();
-    }
+  componentDidMount () {
+    this.context.authStore.authCheckState();
+  }
 
-    renderAuthenticated = () => {
-        return (
-        <Layout>
-            <Switch>
-                <Route key='/checkout' path='/checkout'><Checkout /></Route>
-                <Route key='/orders' path='/orders'> <Orders /></Route>
-                <Route key='/' path='/' exact><BurgerBuilder /></Route>
-                <Route key='/logout' path='/logout'>
-                    <Logout onLogout={() => this.context.authStore.logout()}/>
-                </Route>
-                <Redirect key='redirect' to='/' />
-            </Switch>
-        </Layout>);
-    }
-
-    renderUnAuthenticated = () => {
-        return (
-        <Layout>
-            <Switch>
+  renderAuthenticated = () => {
+    return (
+    <Layout>
+        <Switch>
+            <Route key='/checkout' path='/checkout'><Checkout /></Route>
+            <Route key='/orders' path='/orders'> <Orders /></Route>
             <Route key='/' path='/' exact><BurgerBuilder /></Route>
-            <Route key='/registration' path='/registration'><Auth/></Route>
+            <Route key='/logout' path='/logout'>
+                <Logout onLogout={() => this.context.authStore.logout()}/>
+            </Route>
             <Redirect key='redirect' to='/' />
-            </Switch>
-        </Layout>);
+        </Switch>
+    </Layout>);
+  }
+
+  renderUnAuthenticated = () => {
+    return (
+    <Layout>
+        <Switch>
+        <Route key='/' path='/' exact><BurgerBuilder /></Route>
+        <Route key='/registration' path='/registration'><Auth/></Route>
+        <Redirect key='redirect' to='/' />
+        </Switch>
+    </Layout>);
+  }
+
+  render () {
+    const isAuthenticated = this.context.authStore.isAuthenticated;
+
+    if (isAuthenticated) {
+        return this.renderAuthenticated();
     }
 
-    render () {
-        const isAuthenticated = this.context.authStore.isAuthenticated;
-
-        if (isAuthenticated) {
-            return this.renderAuthenticated();
-        }
-
-        return this.renderUnAuthenticated();
-    }
+    return this.renderUnAuthenticated
+  }
 }
 
 export default App;
