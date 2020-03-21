@@ -76,6 +76,7 @@ class Auth extends React.Component {
         }
 
         if ( this.context.authStore.isAuthenticated ){
+            debugger
             return <Redirect to='/'/>
         }
 

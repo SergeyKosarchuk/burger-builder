@@ -19,41 +19,40 @@ export class App extends React.Component {
         this.context.authStore.authCheckState();
     }
 
-    renderAuthenticated () {
+    renderAuthenticated = () => {
         return (
-        <div>
-            <Route key='/checkout' path='/checkout'><Checkout /></Route>
-            <Route key='/orders' path='/orders'> <Orders /></Route>
-            <Route key='/' path='/' exact><BurgerBuilder /></Route>
-            <Route key='/logout' path='/logout'>
-                <Logout onLogout={() => this.context.authStore.logout()}/>
-            </Route>
-            <Redirect key='redirect' to='/' />
-        </div>);
+        <Layout>
+            <Switch>
+                <Route key='/checkout' path='/checkout'><Checkout /></Route>
+                <Route key='/orders' path='/orders'> <Orders /></Route>
+                <Route key='/' path='/' exact><BurgerBuilder /></Route>
+                <Route key='/logout' path='/logout'>
+                    <Logout onLogout={() => this.context.authStore.logout()}/>
+                </Route>
+                <Redirect key='redirect' to='/' />
+            </Switch>
+        </Layout>);
     }
 
-    renderUnAuthenticated () {
+    renderUnAuthenticated = () => {
         return (
-        <div>
+        <Layout>
+            <Switch>
             <Route key='/' path='/' exact><BurgerBuilder /></Route>
             <Route key='/registration' path='/registration'><Auth/></Route>
             <Redirect key='redirect' to='/' />
-        </div>
-        );
+            </Switch>
+        </Layout>);
     }
 
     render () {
         const isAuthenticated = this.context.authStore.isAuthenticated;
 
-        return (
-            <div>
-                <Layout>
-                    <Switch>
-                        {isAuthenticated ? this.renderAuthenticated() : this.renderUnAuthenticated()}
-                    </Switch>
-                </Layout>
-            </div>
-        );
+        if (isAuthenticated) {
+            return this.renderAuthenticated();
+        }
+
+        return this.renderUnAuthenticated();
     }
 }
 
