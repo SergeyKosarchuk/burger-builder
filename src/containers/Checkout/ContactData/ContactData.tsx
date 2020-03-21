@@ -1,15 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 
 import axios from '../../../axios-orders';
 import Button, { ACCEPT_TYPE } from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spiner';
 import makeInput from '../../../components/UI/Input/Input';
-import { RootState } from '../../../store/store';
 import { EmailValidator, LengthValidator, IValidator } from './validators';
-import Ingredient from '../../../types/ingredient';
 import { FieldType } from '../../../components/UI/Input/types';
+import rootStoreContext from '../../../context/rootStoreContext';
+import { observer } from 'mobx-react';
 
 const StyledContactData = styled.div`
     margin: 20px auto;
@@ -26,11 +25,7 @@ const StyledContactData = styled.div`
 `;
 
 interface ContactDataProps {
-    ingredients: Ingredient[],
-    totalPrice: string,
-    userId?: string,
     onComplete(): void,
-    token?: string
 }
 
 interface ContactDataState {
@@ -63,7 +58,11 @@ type orderFormType = {
     [field in InputFieldSet]: FieldConfig
 };
 
+@observer
 class ContactData extends React.Component<ContactDataProps, ContactDataState> {
+    static contextType = rootStoreContext;
+    context!: React.ContextType<typeof rootStoreContext>
+
     state = {
         name: '',
         email: '',
@@ -135,11 +134,14 @@ class ContactData extends React.Component<ContactDataProps, ContactDataState> {
     orderHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault()
         this.setState({isLoading: true})
+        const { ingredients, totalPrice } = this.context.burgerBuilderStore;
+        const { userId, token } = this.context.authStore;
+
         const order = {
-            ingredients: this.props.ingredients,
-            totalPrice: this.props.totalPrice,
+            ingredients: ingredients,
+            totalPrice: totalPrice,
             customer: {
-                userId: this.props.userId,
+                userId: userId,
                 name: this.state.name,
                 address: {
                     street: this.state.street,
@@ -149,10 +151,13 @@ class ContactData extends React.Component<ContactDataProps, ContactDataState> {
             },
             created: new Date().toISOString()
         }
-        axios.post(`orders/.json?auth=${this.props.token}`, order)
+        axios.post(`orders/.json?auth=${token}`, order)
             .then(() => {
                 this.setState({isLoading: false})
                 this.props.onComplete()
+
+                // TODO: Create order from store
+                this.context.ordersStore.fetchOrders()
             }).catch((err) => {
                 console.info(err);
             });
@@ -211,7 +216,4 @@ class ContactData extends React.Component<ContactDataProps, ContactDataState> {
     }
 }
 
-const mapStateToProps = (state: RootState) => ({
-    token: state.auth.token, userId: state.auth.userId});
-
-export default connect(mapStateToProps, null)(ContactData);
+export default ContactData;

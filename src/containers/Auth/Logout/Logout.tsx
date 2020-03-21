@@ -1,12 +1,8 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
-import { logout } from '../../../store/Auth/actions';
-import { AuthActionType } from '../../../store/Auth/types';
-
 interface ILogoutProps {
-    onLogout(): void,
+    onLogout(): void
 }
 
 class Logout extends React.Component<ILogoutProps>{
@@ -19,10 +15,4 @@ class Logout extends React.Component<ILogoutProps>{
     }
 }
 
-const mapDispatchToProps = (dispatch: (action: AuthActionType) => void) => ({
-    onLogout: () => dispatch(logout())
-})
-
-
-const connector = connect(null, mapDispatchToProps)(Logout);
-export default connector;
+export default Logout;

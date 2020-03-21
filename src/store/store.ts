@@ -1,22 +1,23 @@
-import { createStore, applyMiddleware, combineReducers } from 'redux';
-import { composeWithDevTools } from 'redux-devtools-extension';
-import thunk from 'redux-thunk';
+import AuthStore from './AuthStore/store';
+import OrdersStore from './OrdersStore/store';
+import BurgerBuilderStore from './BurgerBuilderStore/store';
 
-import authReducer from './Auth/reducer';
-import burgerBuilderReducer from './BurgerBuilder/reducer';
-import orderReducer from './Orders/reducer';
+export interface IRootStore {
+  authStore: AuthStore;
+  ordersStore: OrdersStore;
+  burgerBuilderStore: BurgerBuilderStore;
+}
 
+class RootStore implements IRootStore {
+  authStore: AuthStore;
+  ordersStore: OrdersStore;
+  burgerBuilderStore: BurgerBuilderStore;
 
-const rootReducer = combineReducers({
-    auth: authReducer,
-    burgerBuilder: burgerBuilderReducer,
-    orders: orderReducer,
-})
+  constructor (){
+    this.authStore = new AuthStore();
+    this.ordersStore = new OrdersStore(this);
+    this.burgerBuilderStore = new BurgerBuilderStore();
+  }
+}
 
-const store = createStore(rootReducer, composeWithDevTools(
-    applyMiddleware(thunk),
-));
-
-
-export default store;
-export type RootState = ReturnType<typeof rootReducer>;
+export default new RootStore();

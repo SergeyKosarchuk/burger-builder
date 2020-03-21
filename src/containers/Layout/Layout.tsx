@@ -1,24 +1,24 @@
 import React from 'react';
 import styled from 'styled-components';
-import { connect } from 'react-redux';
 
 import Toolbar from '../../components/UI/Navigation/Toolbar/Toolbar';
 import SideDrawer from '../../components/UI/Navigation/SideDrawer/SideDrawer';
-import { RootState } from '../../store/store';
+import { observer } from 'mobx-react';
+import rootStoreContext from '../../context/rootStoreContext';
 
 const Main = styled.main`
     margin-top: 72px;
 `;
 
-interface LayoutStoreProps {
-    isAuthenticated: boolean
-}
-
 interface LayoutState {
     isSideDrawerOpen: boolean
 }
 
-class Layout extends React.Component<LayoutStoreProps, LayoutState>{
+@observer
+class Layout extends React.Component<{}, LayoutState>{
+    static contextType = rootStoreContext;
+    context!: React.ContextType<typeof rootStoreContext>;
+
     state = {
         isSideDrawerOpen: false
     }
@@ -34,15 +34,17 @@ class Layout extends React.Component<LayoutStoreProps, LayoutState>{
     }
 
     render(){
+        const isAuthenticated = this.context.authStore.isAuthenticated;
+
         return (
             <>
                 <Toolbar
                     menuOpened={this.sideDrawOpenHandler}
-                    isAuthenticated={this.props.isAuthenticated}/>
+                    isAuthenticated={isAuthenticated}/>
                 <SideDrawer
                     closed={this.sideDrawerClosedHandler}
                     isOpen={this.state.isSideDrawerOpen}
-                    isAuthenticated={this.props.isAuthenticated}/>
+                    isAuthenticated={isAuthenticated}/>
                 <Main>
                     {this.props.children}
                 </Main>
@@ -51,6 +53,4 @@ class Layout extends React.Component<LayoutStoreProps, LayoutState>{
     }
 }
 
-const mapStateToProps = (state: RootState):LayoutStoreProps  => ({isAuthenticated: !!state.auth.token});
-
-export default connect<LayoutStoreProps, {}, {}, RootState>(mapStateToProps)(Layout);
+export default Layout;
