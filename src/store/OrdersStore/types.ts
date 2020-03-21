@@ -9,3 +9,10 @@ export interface IFetchedOrder {
 export interface FetchedOrders {
   [id: string]: IFetchedOrder
 }
+
+export interface IOrderData {
+  name: string,
+  street: string,
+  postalCode: string,
+  email: string,
+}

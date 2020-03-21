@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import axios from '../../../axios-orders';
 import Button, { ACCEPT_TYPE } from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spiner';
 import makeInput from '../../../components/UI/Input/Input';
@@ -131,36 +130,27 @@ class ContactData extends React.Component<ContactDataProps, ContactDataState> {
     email: new EmailValidator()
   }
 
-  orderHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+  orderHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     this.setState({isLoading: true})
-    const { ingredients, totalPrice } = this.context.burgerBuilderStore;
-    const { userId, token } = this.context.authStore;
 
-    const order = {
-      ingredients: ingredients,
-      totalPrice: totalPrice,
-      customer: {
-        userId: userId,
-        name: this.state.name,
-        address: {
-          street: this.state.street,
-          postalCode: this.state.postalCode,
-        },
-        email: this.state.email,
-      },
-      created: new Date().toISOString()
+    const contactData = {
+      name: this.state.name,
+      street: this.state.street,
+      postalCode: this.state.postalCode,
+      email: this.state.email,
     }
-    axios.post(`orders/.json?auth=${token}`, order)
-      .then(() => {
-        this.setState({isLoading: false})
-        this.props.onComplete()
 
-        // TODO: Create order from store
-        this.context.ordersStore.fetchOrders()
-      }).catch((err) => {
-        console.info(err);
-      });
+    try {
+      await this.context.ordersStore.saveOrder(contactData);
+      this.props.onComplete();
+    }
+    catch (err) {
+      alert(err.message);
+    }
+    finally {
+      this.setState({isLoading: false})
+    }
   }
 
   inputChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
