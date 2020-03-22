@@ -3,7 +3,7 @@ import { observer } from 'mobx-react';
 
 import axios from '../../axios-orders';
 import Order from '../../components/Order/Order';
-import Spinner from '../../components/UI/Spinner/Spiner';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../withErrorHandler/withErrorHandler';
 import rootStoreContext from '../../context/rootStoreContext';
 import {

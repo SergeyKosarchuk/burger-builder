@@ -33,19 +33,19 @@ class AuthStore {
   login = (email: string, password: string) => {
     this.state = PENDING_STATE;
     const url = `${FIREBASE_AUTH_URL}${FIREBASE_AUTH_SIGN_IN}`;
-    const payloadd = {
+    const payload = {
       email: email,
       password: password,
       returnSecureToken: true
   };
 
-    axios.post(url, payloadd, {
+    axios.post(url, payload, {
       params: {
         key: process.env.REACT_APP_FIREBASE_API_KEY,
       },
 
     })
-    .then(this.loginSuccsess)
+    .then(this.loginSuccess)
     .catch(this.loginError)
   }
 
@@ -53,24 +53,24 @@ class AuthStore {
   register = (email: string, password: string) => {
     this.state = PENDING_STATE;
     const url = `${FIREBASE_AUTH_URL}${FIREBASE_AUTH_SIGN_UP}`;
-    const payloadd = {
+    const payload = {
       email: email,
       password: password,
       returnSecureToken: true
     };
 
-    axios.post(url, payloadd, {
+    axios.post(url, payload, {
       params: {
         key: process.env.REACT_APP_FIREBASE_API_KEY,
       },
 
     })
-    .then(this.registerSuccsess)
+    .then(this.registerSuccess)
     .catch(this.registerError)
   }
 
   @action.bound
-  loginSuccsess (response: any) {
+  loginSuccess (response: any) {
     const [userId, token, expiresInSeconds] = getUserFromResponse(response);
 
     this.state = AUTHENTICATED_STATE;
@@ -82,7 +82,7 @@ class AuthStore {
   }
 
   @action.bound
-  registerSuccsess (response: any) {
+  registerSuccess (response: any) {
     const [userId, token, expiresInSeconds] = getUserFromResponse(response);
 
     this.state = AUTHENTICATED_STATE;

@@ -6,7 +6,7 @@ import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
-import Spiner from '../../components/UI/Spinner/Spiner';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../withErrorHandler/withErrorHandler';
 import rootStoreContext from '../../context/rootStoreContext';
 import { NOT_UPLOADED } from '../../store/BurgerBuilderStore/consts';
@@ -69,7 +69,7 @@ export class BurgerBuilder extends React.Component<RouteComponentProps, BurgerBu
                      cancelClicked={this.orderCancelClickedHandler}/>
 
     if (isLoading) {
-      orderSummery = <Spiner />
+      orderSummery = <Spinner />
     }
 
     return (

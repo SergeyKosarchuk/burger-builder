@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import Button, { ACCEPT_TYPE } from '../../../components/UI/Button/Button';
-import Spinner from '../../../components/UI/Spinner/Spiner';
+import Spinner from '../../../components/UI/Spinner/Spinner';
 import makeInput from '../../../components/UI/Input/Input';
 import { EmailValidator, LengthValidator, IValidator } from './validators';
 import { FieldType } from '../../../components/UI/Input/types';
@@ -38,8 +38,8 @@ interface ContactDataState {
 }
 
 type ValidatedInputFieldSet = 'name' | 'postalCode' | 'street' | 'email';
-type NonValidatedIputFieldSet = 'deliveryMethod';
-type InputFieldSet = ValidatedInputFieldSet | NonValidatedIputFieldSet;
+type NonValidatedInputFieldSet = 'deliveryMethod';
+type InputFieldSet = ValidatedInputFieldSet | NonValidatedInputFieldSet;
 type FormErrorsType = {
   [field: string]: boolean
 };

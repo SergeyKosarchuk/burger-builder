@@ -60,12 +60,12 @@ class OrdersStore {
     const userId = this.rootStore.authStore.userId;
     const queryParams = `?auth=${token}&orderBy="customer/userId"&equalTo="${userId}"`
     axios.get(ORDERS_URL + queryParams)
-    .then(response => this.fetchOrdersSuccsess(response.data))
+    .then(response => this.fetchOrdersSuccess(response.data))
     .catch(response => this.fetchOrdersError(response.message))
   }
 
   @action.bound
-  fetchOrdersSuccsess = (data: FetchedOrders) => {
+  fetchOrdersSuccess = (data: FetchedOrders) => {
     this.orders = Object.entries(data).map(([id, order]) => ({
       id: id,
       totalPrice: order.totalPrice,

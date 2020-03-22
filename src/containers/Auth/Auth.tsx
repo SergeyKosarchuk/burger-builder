@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import { Redirect } from 'react-router-dom';
 
 import { Input } from '../../components/UI/Input/Input';
-import Spinner from '../../components/UI/Spinner/Spiner';
+import Spinner from '../../components/UI/Spinner/Spinner';
 import Button, { ACCEPT_TYPE } from '../../components/UI/Button/Button';
 import rootStoreContext from '../../context/rootStoreContext';
 
@@ -30,12 +30,12 @@ class Auth extends React.Component {
 
   @observable email: string = '';
   @observable password: string = '';
-  @observable isSignup: boolean = true;
+  @observable isSignUp: boolean = true;
 
   @action authHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
 
-    if (this.isSignup) {
+    if (this.isSignUp) {
       this.context.authStore.register(this.email, this.password);
     }
     else {
@@ -50,14 +50,14 @@ class Auth extends React.Component {
   }
 
   @action
-  handlePassowrdInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+  handlePasswordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.persist()
     this.password = event.target.value;
   }
 
   @action
   switchAuthModeHandler = () => {
-    this.isSignup = !this.isSignup;
+    this.isSignUp = !this.isSignUp;
   }
 
   @computed
@@ -67,7 +67,7 @@ class Auth extends React.Component {
 
   @computed
   get formLabel () {
-    return this.isSignup ? 'SIGN IN' : 'SIGN UP';
+    return this.isSignUp ? 'SIGN IN' : 'SIGN UP';
   }
 
   render () {
@@ -84,7 +84,7 @@ class Auth extends React.Component {
         <form>
           {this.context.authStore.error}
           <Input value={this.email} fieldName='email' onChange={this.handleEmailInput} placeholder='Email'/>
-          <Input value={this.password} fieldName='password' onChange={this.handlePassowrdInput} placeholder='Password'/>
+          <Input value={this.password} fieldName='password' onChange={this.handlePasswordInput} placeholder='Password'/>
           <Button type={ACCEPT_TYPE} clicked={this.authHandler} disabled={this.isSubmitDisabled}>SUBMIT</Button>
         </form>
       <Button clicked={this.switchAuthModeHandler}>SWITCH TO {this.formLabel}</Button>
