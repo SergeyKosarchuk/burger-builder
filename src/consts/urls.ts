@@ -1,4 +1,5 @@
-export const FIREBASE_AUTH_URL = 'https://identitytoolkit.googleapis.com/v1/accounts';
-export const FIREBASE_AUTH_SIGN_IN = ':signInWithPassword'
-export const FIREBASE_AUTH_SIGN_UP = ':signUp'
-export const ORDERS_URL = 'orders/.json';
+export const SIGN_UP_URL = '/register';
+export const SIGN_IN_URL = '/login';
+export const INGREDIENTS_URL = '/ingredients';
+export const BURGERS_URL = '/burgers';
+export const ORDERS_URL = '/orders';

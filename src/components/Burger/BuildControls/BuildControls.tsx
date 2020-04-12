@@ -2,11 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 
 import BuildControl from './BuildControl/BuildControl';
-import { SALAD, CHEESE, BACON, MEAT } from '../../../consts/ingredients';
 import { IBuildControlsProps } from './types';
-import Ingredient from '../../../types/ingredient';
+import { observer } from 'mobx-react';
+import Ingredient from '../../../types/customingredient';
+import rootStoreContext from '../../../context/rootStoreContext';
+import { count } from '../../../utils';
 
-const BuildControls = styled.div`
+const StyledBuildControls = styled.div`
   width: 100%;
   background-color: #CF8F2E;
   display: flex;
@@ -41,38 +43,44 @@ const OrderButton = styled.button`
   };
 `;
 
-type Control = {
-  label: string,
-  type: Ingredient
-}
+@observer
+export default class BuildControls extends React.Component<IBuildControlsProps> {
+  static contextType = rootStoreContext;
+  context!: React.ContextType<typeof rootStoreContext>
 
-const controls: Control[] = [
-  { label: 'Salad', type: SALAD },
-  { label: 'Cheese', type: CHEESE },
-  { label: 'Bacon', type: BACON },
-  { label: 'Meat', type: MEAT },
-];
+  isIngredientDisabled = (ingredient: Ingredient): boolean => {
+    return !count(this.props.ingredients, (item: Ingredient) => item._id, ingredient)
+  }
 
-export default function buildControls (props: IBuildControlsProps) {
-  const buttonMessage = props.isAuthenticated ? 'ORDER NOW' : 'SIGN IN TO ORDER';
-  const buildControls = controls.map(control => (
-    <BuildControl
-          key={control.type}
-          label={control.label}
-          added={() => props.ingredientAdded(control.type)}
-          removed={() => props.ingredientRemoved(control.type)}
-          disabled={props.disabled.includes(control.type)} />
-  ))
+  render () {
+    const {
+      isAuthenticated,
+      ingredients,
+      ingredientAdded,
+      ingredientRemoved,
+      price,
+      orderCompleteHandler,
+    } = this.props
+    const buttonMessage = isAuthenticated ? 'ORDER NOW' : 'SIGN IN TO ORDER';
+    const controls = this.context.ingredientsStore.ingredients.map(ingredient => {
+      return <BuildControl
+        key={ingredient._id}
+        label={ingredient.name}
+        added={() => ingredientAdded(ingredient)}
+        removed={() => ingredientRemoved(ingredient)}
+        disabled={this.isIngredientDisabled(ingredient)}/>
+    })
 
-  return (
-    <BuildControls>
-      <p>Current price: <strong>{props.price}</strong></p>
-      {buildControls}
-      <OrderButton
-        disabled={!props.ingredientsSelected}
-        onClick={props.orderCompleteHandler}
-        >{buttonMessage}
-      </OrderButton>
-    </BuildControls>
-  );
+    return (
+      <StyledBuildControls>
+        <p>Current price: <strong>{price}</strong></p>
+        {controls}
+        <OrderButton
+          disabled={!ingredients.length}
+          onClick={orderCompleteHandler}
+          >{buttonMessage}
+        </OrderButton>
+      </StyledBuildControls>
+    );
+  }
 }

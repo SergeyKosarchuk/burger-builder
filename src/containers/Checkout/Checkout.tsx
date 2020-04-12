@@ -17,7 +17,7 @@ class Checkout extends React.Component<RouteComponentProps> {
     return (
       <div>
         <CheckoutSummary ingredients={ingredients}
-                totalPrice={totalPrice}
+                totalPrice={totalPrice.toFixed()}
                 checkoutCancelled={() => history.goBack()}
                 checkoutContinued={() => history.push(match.path + '/contact-data')}/>
         <Route path={match.path + '/contact-data'}>

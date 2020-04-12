@@ -29,6 +29,7 @@ export default function navigationItems (props: navigationItemsProps) {
     links.push(<NavigationItem key='/logout' link='/logout'>Logout</NavigationItem>);
   }
   else {
+    links.push(<NavigationItem key='/login' link='/login'>Login</NavigationItem>);
     links.push(<NavigationItem key='/registration' link='/registration'>Registration</NavigationItem>);
   }
 

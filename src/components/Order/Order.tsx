@@ -1,10 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { countIngredients } from './utils';
-import Ingredient from '../../types/ingredient';
+import Order from '../../types/order';
+import SummeryList from '../Burger/OrderSummary/SummeryList';
 
-const Order = styled.div`
+const OrderWrapper = styled.div`
   width: 100%;
   border: 1px solid #eee;
   box-shadow: 0 2px 3px #ccc;
@@ -22,21 +22,17 @@ const Span = styled.span`
 `;
 
 type OrderProps = {
-  totalPrice: string,
-  ingredients: Ingredient[]
+  order: Order,
 }
 
-const order = ({totalPrice, ingredients}: OrderProps) => {
-  const ingsCounts = countIngredients(ingredients)
-  const totalSum = Object.entries(ingsCounts).map(([name, count]) => {
-    return <Span key={name}>{name}: {count}</Span>
-  });
-
+const order = ({ order }: OrderProps) => {
   return (
-    <Order>
-      <p>Ingredients: {totalSum}</p>
-      <p>Price: <strong>{totalPrice}</strong> USD</p>
-    </Order>
+    <OrderWrapper>
+      <p>{order.burger.name}</p>
+      <p>Created at: {order.createdAt.toLocaleDateString()}</p>
+      <SummeryList ingredients={order.burger.ingredients}></SummeryList>
+      <p>Price: <Span>{order.price}</Span> USD</p>
+    </OrderWrapper>
   );
 };
 

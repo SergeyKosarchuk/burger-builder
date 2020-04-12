@@ -2,10 +2,10 @@ import React from 'react';
 import Button from '../../UI/Button/Button';
 
 import SummeryList from './SummeryList';
-import IIngredient from '../../../types/ingredient';
+import Ingredient from '../../../types/customingredient';
 
 type orderSummeryProps = {
-  ingredients: IIngredient[],
+  ingredients: Ingredient[],
   acceptClicked(): void,
   cancelClicked(): void,
   totalPrice: string,

@@ -1,3 +1,14 @@
+# Burger Builder
+
+Modified Burger Builder app from from Udemy React guide.<br>
+
+Key differences:
+
+* __Styled Components__
+* __TypeScript__
+* __MobX__
+* Custom backend powered by __Express__ and __MongoDB__
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -23,26 +34,14 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.<br>
 Your app is ready to be deployed!
 
-
 ## Backend
 
-This app uses `Firebase Realtime Database` for backend.<br>
-You need to set `REACT_APP_FIREBASE_DB_URL` and `REACT_APP_FIREBASE_API_KEY` config variables in `.env` file before build. 
-
+Backend for this app can be found [there](https://github.com/SergeyKosarchuk/burger-builder-back).<br>
+You need to set `REACT_APP_SERVICE_URL` config variable in `.env` file before build.
 
 ## Deployment
 
-You can deploy app to `Firebase` or use `Docker`
-
-### Firebase
-- Build app with `npm run build`
-- Install Firebase CLI `curl -sL firebase.tools | bash`
-- Login `firebase login`
-- Local deployment check `firebase serve`
-- Deploy `firebase deploy`
-
-
 ### DockerFile
 
-- Build app with `npm run build`
-- Build image and run container
+* Build app with `npm run build`
+* Build image and run container
