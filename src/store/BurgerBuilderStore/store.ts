@@ -1,78 +1,115 @@
 import { observable, action, computed } from 'mobx';
 
-import axios from '../../axios-orders';
+import api from '../../api';
 import {
-  STARTING_PRICE,
-  INGREDIENT_PRICES,
   NOT_UPLOADED,
   LOADING,
   SUCCSESS,
   ERROR
-} from './consts';
-import Ingredient from '../../types/ingredient';
-import { BurgerBuilderState } from './types';
-import { SELECTABLE_INGREDIENTS } from '../../consts/ingredients';
+} from '../../consts/states';
+import Ingredient from '../../types/customingredient';
+import Burger, { IBurgerResponse } from '../../types/burger';
+import { LoadingState } from '../../types/states';
+import { BURGERS_URL } from '../../consts/urls';
 import { count } from '../../utils';
+import { IRootStore } from '../store';
 
+export type IngredinetCounts = {
+  [key: string]: number
+}
 
 class BurgerBuilderStore {
-  @observable state: BurgerBuilderState = NOT_UPLOADED;
-  @observable ingredients: Ingredient[] = [];
+  @observable state: LoadingState = NOT_UPLOADED;
+  @observable extraIngredients: Ingredient[] = [];
+  @observable excludeIngredients: Ingredient[] = [];
+  @observable burger?: Burger;
   @observable error?: string;
+  @observable IngredinetCounts: IngredinetCounts = {};
+
+  constructor(private readonly rootStore: IRootStore) {}
+
+  @computed get ingredients() {
+    let ingredients = this.burger ? this.burger.ingredients : [];
+    ingredients = ingredients.concat(this.extraIngredients)
+
+    this.excludeIngredients.forEach(ingredient => {
+      const pos = ingredients.findIndex(item => (item._id === ingredient._id));
+      if (pos !== -1) {
+        ingredients.splice(pos, 1);
+      }
+    })
+
+    return ingredients
+  }
 
   @computed get totalPrice() {
-    const ingredientsPrice = this.ingredients.reduce(
-      (prev, curr) => prev + INGREDIENT_PRICES[curr], 0);
-
-    return (ingredientsPrice + STARTING_PRICE).toFixed(2);
+    return this.extraIngredients.reduce(
+      (prev, curr) => ( prev + curr.price ), this.burger ? this.burger.price : 0);
   }
 
   @computed get isLoading() {
     return this.state === LOADING
   }
 
-  @computed get isIngredientsSelected () {
-    return !!this.ingredients.length
-  }
-
   @computed get disabledIngredients () {
-    const disabled: Ingredient[] = [];
+    const disabledIngredients: Ingredient[] = [];
 
-    for (let ingredient of SELECTABLE_INGREDIENTS) {
-      if (count(ingredient, this.ingredients) === 0) {
-          disabled.push(ingredient)
+    const ingredientCounter = (ingredient: Ingredient): number => {
+      return count(this.ingredients, (item: Ingredient) => item._id, ingredient)
+    }
+
+    for (const ingredient of this.rootStore.ingredientsStore.ingredients) {
+      if (!ingredientCounter(ingredient)) {
+        disabledIngredients.push(ingredient);
       }
     }
 
-    return disabled;
+    return disabledIngredients;
   }
 
   @action addIngredient = (ingredient: Ingredient) => {
-    this.ingredients.push(ingredient);
-  }
+    const pos = this.excludeIngredients.findIndex(
+      item => (item._id === ingredient._id));
 
-  @action deleteIngredient = (ingredient: Ingredient) => {
-    const position = this.ingredients.lastIndexOf(ingredient);
-
-    if (position !== -1) {
-      this.ingredients.splice(position, 1);
+    if (pos !== -1) {
+      this.excludeIngredients.splice(pos, 1);
+    }
+    else {
+      this.extraIngredients.push(ingredient);
     }
   }
 
-  @action fetchIngredients = () => {
+  @action deleteIngredient = (ingredient: Ingredient) => {
+    const pos = this.extraIngredients.findIndex(
+      item => (item._id === ingredient._id));
+
+    if (pos !== -1) {
+      this.extraIngredients.splice(pos, 1);
+    }
+    else {
+      const pos = this.ingredients.findIndex(
+        item => (item._id === ingredient._id));
+
+      if ( pos !== undefined &&  pos !== -1 ) {
+        this.excludeIngredients.push(ingredient);
+      }
+    }
+  }
+
+  @action fetchBurger = () => {
     this.state = LOADING;
 
-    axios.get('start_ingredients/.json')
-    .then(response => this.fetchIngredientsSuccsess(response.data))
-    .catch(response => this.fetchIngredientsError(response.error));
+    api.get<IBurgerResponse[]>(BURGERS_URL)
+    .then(response => this.fetchBurgerSuccsess(response.data[0]))
+    .catch(response => this.fetchBurgerError(response.error));
   }
 
-  @action.bound fetchIngredientsSuccsess = (ingredients: Ingredient[]) => {
+  @action.bound fetchBurgerSuccsess = (burger: IBurgerResponse) => {
     this.state = SUCCSESS;
-    this.ingredients = ingredients;
+    this.burger = new Burger(burger);
   }
 
-  @action.bound fetchIngredientsError = (error: string) => {
+  @action.bound fetchBurgerError = (error: string) => {
     this.state = ERROR;
     this.error = error;
   }

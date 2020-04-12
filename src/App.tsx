@@ -5,10 +5,11 @@ import Layout from "./containers/Layout/Layout";
 import BurgerBuilder from "./containers/BurgerBuilder/BurgerBuilder";
 import Checkout from './containers/Checkout/Checkout';
 import Orders from './containers/Orders/Orders';
-import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
 import { observer } from 'mobx-react';
 import rootStoreContext from './context/rootStoreContext';
+import Login from './containers/Auth/Login';
+import Registration from './containers/Auth/Registration';
 
 @observer
 export class App extends React.Component {
@@ -16,7 +17,9 @@ export class App extends React.Component {
   context!: React.ContextType<typeof rootStoreContext>;
 
   componentDidMount () {
-    this.context.authStore.authCheckState();
+    if (!this.context.authStore.isAuthenticated) {
+      this.context.authStore.authCheckState();
+    }
   }
 
   renderAuthenticated = () => {
@@ -39,7 +42,8 @@ export class App extends React.Component {
     <Layout>
         <Switch>
         <Route key='/' path='/' exact><BurgerBuilder /></Route>
-        <Route key='/registration' path='/registration'><Auth/></Route>
+        <Route key='/login' path='/login'><Login/></Route>
+        <Route key='/registration' path='/registration'><Registration/></Route>
         <Redirect key='redirect' to='/' />
         </Switch>
     </Layout>);

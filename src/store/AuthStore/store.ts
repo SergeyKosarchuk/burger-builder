@@ -1,10 +1,9 @@
 import { observable, action, computed } from 'mobx';
-import axios from 'axios';
+import api, { setAuthToken, unsetAuthToken } from './../../api';
 
 import {
-  FIREBASE_AUTH_URL,
-  FIREBASE_AUTH_SIGN_IN,
-  FIREBASE_AUTH_SIGN_UP
+  SIGN_IN_URL,
+  SIGN_UP_URL,
 } from '../../consts/urls';
 import {
   PENDING_STATE,
@@ -12,12 +11,13 @@ import {
   UNAUTHENTICATED_STATE,
   ERROR_STATE
 } from './consts';
-import { AuthStoreState } from './types';
-import { getUserFromResponse } from './utils';
+import { AuthStoreState, JWTResponse } from './types';
+import User, { IUserResponse, ANONYMOUS } from '../../types/user';
+
 
 class AuthStore {
   @observable token?: string = undefined;
-  @observable userId?: string = undefined;
+  @observable user: User = ANONYMOUS;
   @observable error?: string = undefined;
   @observable state: AuthStoreState = UNAUTHENTICATED_STATE;
 
@@ -30,111 +30,111 @@ class AuthStore {
   }
 
   @action
-  login = (email: string, password: string) => {
+  login = (username: string, password: string) => {
     this.state = PENDING_STATE;
-    const url = `${FIREBASE_AUTH_URL}${FIREBASE_AUTH_SIGN_IN}`;
     const payload = {
-      email: email,
+      username: username,
       password: password,
-      returnSecureToken: true
   };
 
-    axios.post(url, payload, {
-      params: {
-        key: process.env.REACT_APP_FIREBASE_API_KEY,
-      },
-
-    })
+    api.post<string>(SIGN_IN_URL, payload)
     .then(this.loginSuccess)
     .catch(this.loginError)
   }
 
   @action
-  register = (email: string, password: string) => {
+  register = (username: string, password: string, email: string, age: number|undefined) => {
     this.state = PENDING_STATE;
-    const url = `${FIREBASE_AUTH_URL}${FIREBASE_AUTH_SIGN_UP}`;
     const payload = {
-      email: email,
+      username: username,
       password: password,
-      returnSecureToken: true
+      email: email,
+      age: age
     };
 
-    axios.post(url, payload, {
-      params: {
-        key: process.env.REACT_APP_FIREBASE_API_KEY,
-      },
-
-    })
-    .then(this.registerSuccess)
+    api.post<IUserResponse>(SIGN_UP_URL, payload)
+    .then((response) => this.registerSuccess(response.data))
+    .then(() => this.login(username, password))
     .catch(this.registerError)
   }
 
   @action.bound
-  loginSuccess (response: any) {
-    const [userId, token, expiresInSeconds] = getUserFromResponse(response);
+  loginSuccess (response: JWTResponse) {
+    const token = response.data;
 
     this.state = AUTHENTICATED_STATE;
-    this.userId = userId;
     this.token = token;
     this.error = undefined;
-
-    setTimeout(this.logout, expiresInSeconds * 1000);
+    setAuthToken(this.token);
+    this.setUser(token);
+    localStorage.setItem('token', token);
   }
 
   @action.bound
-  registerSuccess (response: any) {
-    const [userId, token, expiresInSeconds] = getUserFromResponse(response);
-
-    this.state = AUTHENTICATED_STATE;
-    this.userId = userId;
-    this.token = token;
+  registerSuccess (userObj: IUserResponse) {
+    this.user = new User(userObj);
     this.error = undefined;
-
-    setTimeout(this.logout, expiresInSeconds * 1000);
   }
 
   @action.bound
   loginError (error: any) {
     this.state = ERROR_STATE;
-    this.error = error.response.data.error.message
+    this.error = error.toString();
+    unsetAuthToken();
   }
 
   @action.bound
   registerError (error: any) {
     this.state = ERROR_STATE;
-    this.error = error.response.data.error.message
+    this.error = error.toString();
   }
 
   @action
   logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
-    localStorage.removeItem('expirationDate');
-
-    this.userId = undefined;
     this.token = undefined;
     this.state = UNAUTHENTICATED_STATE;
     this.error = undefined;
+    this.user = ANONYMOUS;
+
+    unsetAuthToken();
+    localStorage.removeItem('token');
+  }
+
+  @action
+  setUser = async (token: string) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`}
+    }
+
+    this.state = PENDING_STATE;
+
+    try {
+      const resp = await api.get<IUserResponse>('/whoami', config)
+
+      if (!resp.status) {
+        throw new Error('No response status!')
+      }
+
+      this.user = new User(resp.data);
+      this.state = AUTHENTICATED_STATE;
+      this.token = token;
+      setAuthToken(token);
+    }
+    catch (error) {
+      this.error = error.message;
+      this.user = ANONYMOUS;
+      this.token = undefined;
+      this.state = ERROR_STATE;
+    }
   }
 
   @action
   authCheckState = () => {
     const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
-    let expirationDateStr: string | null = localStorage.getItem('expirationDate');
-    let expirationDate: Date | null = null;
 
-    if (expirationDateStr) {
-        expirationDate = new Date(expirationDateStr);
-    }
-
-    if (token && userId && expirationDate && expirationDate > new Date()) {
-      this.token = token;
-      this.userId = userId;
-      this.state = AUTHENTICATED_STATE;
-
-      const expiresInSeconds = (expirationDate.getTime() - new Date().getTime()) / 1000;
-      setTimeout(this.logout, expiresInSeconds * 1000);
+    if (token) {
+      this.setUser(token)
     }
   }
 }

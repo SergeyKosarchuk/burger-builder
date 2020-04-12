@@ -1,4 +1,4 @@
-import Ingredient from "../../types/ingredient";
+import Ingredient from "../../types/customingredient";
 
 export interface IIngredient {
   name: string,

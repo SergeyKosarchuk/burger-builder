@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from '../../axios-orders';
+import api from '../../api';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import Burger from '../../components/Burger/Burger';
@@ -9,7 +9,7 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../withErrorHandler/withErrorHandler';
 import rootStoreContext from '../../context/rootStoreContext';
-import { NOT_UPLOADED } from '../../store/BurgerBuilderStore/consts';
+import { NOT_UPLOADED } from '../../consts/states';
 import { observer } from 'mobx-react';
 
 interface BurgerBuilderState {
@@ -28,7 +28,7 @@ export class BurgerBuilder extends React.Component<RouteComponentProps, BurgerBu
     if (this.context.authStore.isAuthenticated){
       this.setState({showOrderConfirm: true})
     } else {
-      this.props.history.push({pathname: '/registration'})
+      this.props.history.push({pathname: '/login'})
     }
 
   };
@@ -47,7 +47,10 @@ export class BurgerBuilder extends React.Component<RouteComponentProps, BurgerBu
 
   componentDidMount () {
     if (this.context.burgerBuilderStore.state === NOT_UPLOADED){
-      this.context.burgerBuilderStore.fetchIngredients();
+      this.context.burgerBuilderStore.fetchBurger();
+    }
+    if (this.context.ingredientsStore.state === NOT_UPLOADED){
+      this.context.ingredientsStore.fetchIngredients();
     }
   }
 
@@ -57,14 +60,12 @@ export class BurgerBuilder extends React.Component<RouteComponentProps, BurgerBu
       ingredients,
       totalPrice,
       isLoading,
-      isIngredientsSelected,
       addIngredient,
       deleteIngredient,
-      disabledIngredients
     } = this.context.burgerBuilderStore;
     const isAuthenticated = this.context.authStore.isAuthenticated;
     let orderSummery = <OrderSummary ingredients={ingredients}
-                     totalPrice={totalPrice}
+                     totalPrice={totalPrice.toFixed(2)}
                      acceptClicked={this.orderAcceptClickedHandler}
                      cancelClicked={this.orderCancelClickedHandler}/>
 
@@ -78,17 +79,17 @@ export class BurgerBuilder extends React.Component<RouteComponentProps, BurgerBu
           {orderSummery}
         </Modal>
         <Burger ingredients={ingredients}/>
-        <BuildControls ingredientAdded={addIngredient}
-                 ingredientRemoved={deleteIngredient}
-                 disabled={disabledIngredients}
-                 price={totalPrice}
-                 ingredientsSelected={isIngredientsSelected}
-                 orderCompleteHandler={this.orderCompleteHandler}
-                 isAuthenticated={isAuthenticated}
+        <BuildControls
+          ingredients={ingredients}
+          ingredientAdded={addIngredient}
+          ingredientRemoved={deleteIngredient}
+          price={totalPrice.toFixed(2)}
+          orderCompleteHandler={this.orderCompleteHandler}
+          isAuthenticated={isAuthenticated}
         />
       </>
     )
   }
 }
 
-export default withRouter(withErrorHandler(BurgerBuilder, axios));
+export default withRouter(withErrorHandler(BurgerBuilder, api));

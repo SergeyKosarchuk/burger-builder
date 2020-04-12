@@ -1,10 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
+
 import Logo from '../../../Logo/Logo';
 import NavigationItems from '../NavigationItems/NavigationItems';
 import SideDrawerToogle from '../SideDrawer/SideDrawerToggle/SideDrawerToggle';
+import UserInfo from '../../../UserInfo/UserInfo';
 
-const Toolbar = styled.header`
+const StyledToolbar = styled.header`
   height: 56px;
   width: 100%;
   position: fixed;
@@ -27,17 +29,18 @@ const Nav = styled.nav`
 
 type toolbarProps = {
   menuOpened(): void,
-  isAuthenticated: boolean
+  isAuthenticated: boolean,
 }
 
 export default function toolbar ({ menuOpened, isAuthenticated }: toolbarProps) {
   return (
-    <Toolbar>
-      <SideDrawerToogle clicked={menuOpened} />
-      <Logo/>
-      <Nav>
-        <NavigationItems isAuthenticated={isAuthenticated}/>
-      </Nav>
-    </Toolbar>
-  );
+      <StyledToolbar>
+        <SideDrawerToogle clicked={menuOpened} />
+        <Logo/>
+        <UserInfo/>
+        <Nav>
+          <NavigationItems isAuthenticated={isAuthenticated}/>
+        </Nav>
+      </StyledToolbar>
+    );
 }

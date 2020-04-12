@@ -3,11 +3,10 @@ import styled from 'styled-components';
 
 import Button, { ACCEPT_TYPE } from '../../../components/UI/Button/Button';
 import Spinner from '../../../components/UI/Spinner/Spinner';
-import makeInput from '../../../components/UI/Input/Input';
-import { EmailValidator, LengthValidator, IValidator } from './validators';
-import { FieldType } from '../../../components/UI/Input/types';
+import { LengthValidator } from './validators';
 import rootStoreContext from '../../../context/rootStoreContext';
 import { observer } from 'mobx-react';
+import { CustomInput } from '../../../components/UI/Input/CustomInput';
 
 const StyledContactData = styled.div`
   margin: 20px auto;
@@ -28,34 +27,10 @@ interface ContactDataProps {
 }
 
 interface ContactDataState {
-  name: string,
-  email: string,
-  street: string,
-  postalCode: string,
+  address: string,
+  isError: boolean,
   isLoading: boolean,
-  formErrors: FormErrorsType,
-  deliveryMethod?: string
 }
-
-type ValidatedInputFieldSet = 'name' | 'postalCode' | 'street' | 'email';
-type NonValidatedInputFieldSet = 'deliveryMethod';
-type InputFieldSet = ValidatedInputFieldSet | NonValidatedInputFieldSet;
-type FormErrorsType = {
-  [field: string]: boolean
-};
-
-type Validators = {
-  [field: string]: IValidator
-};
-
-type FieldConfig = {
-  fieldType: FieldType,
-  elementConfig: any
-}
-
-type orderFormType = {
-  [field in InputFieldSet]: FieldConfig
-};
 
 @observer
 class ContactData extends React.Component<ContactDataProps, ContactDataState> {
@@ -63,112 +38,48 @@ class ContactData extends React.Component<ContactDataProps, ContactDataState> {
   context!: React.ContextType<typeof rootStoreContext>
 
   state = {
-    name: '',
-    email: '',
-    street: '',
-    postalCode: '',
+    address: '',
     isLoading: false,
-    formErrors: {
-      name: false,
-      email: false,
-      street: false,
-      postalCode: false,
-      deliveryMethod: false
-    },
-    deliveryMethod: undefined
+    isError: false,
   }
-  orderForm: orderFormType = {
-    name: {
-      fieldType: 'input',
-      elementConfig: {
-        type: 'text',
-        placeholder: 'Your name',
-      },
-    },
-    email: {
-      fieldType: 'input',
-      elementConfig: {
-        type: 'text',
-        placeholder: 'Your email',
-      },
-    },
-    street: {
-      fieldType: 'input',
-      elementConfig: {
-        type: 'text',
-        placeholder: 'Your street',
-      },
-    },
-    postalCode: {
-      fieldType: 'input',
-      elementConfig: {
-        type: 'text',
-        placeholder: 'Your postal code',
-      },
-    },
-    deliveryMethod: {
-      fieldType: 'select',
-      elementConfig: {
-        options: [
-          {value: 'fast', label: 'Fastest'},
-          {value: 'cheap', label: 'Cheapest'},
-          {
-            value: 'default',
-            label: 'Choose delivery method',
-            disabled: true,
-          },
-        ],
-        defaultValue: 'default',
-      },
-    },
-  }
-
-  validators: Validators = {
-    name: new LengthValidator(5, 10),
-    postalCode: new LengthValidator(6, 6),
-    street: new LengthValidator(10, 20),
-    email: new EmailValidator()
-  }
+  addressValidator = new LengthValidator(10, 15);
 
   orderHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault()
     this.setState({isLoading: true})
+    const user = this.context.authStore.user;
+    const burger = this.context.burgerBuilderStore.burger;
 
-    const contactData = {
-      name: this.state.name,
-      street: this.state.street,
-      postalCode: this.state.postalCode,
-      email: this.state.email,
-    }
+    if (user && burger) {
+      const contactData = {
+        address: this.state.address,
+        burger: burger,
+        extraIngredients: this.context.burgerBuilderStore.extraIngredients,
+        excludeIngredients: this.context.burgerBuilderStore.excludeIngredients,
+      }
 
-    try {
-      await this.context.ordersStore.saveOrder(contactData);
-      this.props.onComplete();
-    }
-    catch (err) {
-      alert(err.message);
-    }
-    finally {
-      this.setState({isLoading: false})
+      try {
+        await this.context.ordersStore.saveOrder(contactData);
+        this.props.onComplete();
+      }
+      catch (err) {
+        alert(err.message);
+      }
+      finally {
+        this.setState({isLoading: false})
+      }
     }
   }
 
-  inputChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const name = (event.target.name as InputFieldSet);
-    const value = event.target.value;
-    const hasError = this.validators[name] ? !this.validators[name].validate(value) : false;
+  addressChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const address = event.target.value;
 
-    this.setState(prevState => {
-      const newState = {
-        ...prevState,
-        formErrors: {
-          ...prevState.formErrors
-        }
-      };
-      newState[name] = value;
-      newState.formErrors[name] = hasError;
-      return newState;
-    })
+    if (this.addressValidator.validate(address)) {
+      this.setState({ address: address, isError: false });
+    }
+    else {
+      this.setState({ address: address, isError: true });
+    }
   }
 
   render () {
@@ -176,30 +87,12 @@ class ContactData extends React.Component<ContactDataProps, ContactDataState> {
       return <Spinner />
     }
 
-    const inputs = Object.entries(this.orderForm).map(item => {
-      const fieldName = (item[0] as InputFieldSet);
-      const config = (item[1] as any);
-      const hasError = !!this.state.formErrors[fieldName];
-      const value: any = this.state[fieldName];
-
-      return makeInput({
-        fieldName: fieldName,
-        fieldType: config.fieldType,
-        fieldOptions: config.elementConfig,
-        changed: this.inputChangedHandler,
-        hasError: hasError,
-        value: value
-      })
-    })
-
-    const formHasError = Object.values(this.state.formErrors).some((value) => value);
-
     return (
       <StyledContactData>
         <h4>Enter your contact data</h4>
         <form>
-          {inputs}
-          <Button type={ACCEPT_TYPE} clicked={this.orderHandler} disabled={formHasError}>SAVE ORDER</Button>
+          <CustomInput value={this.state.address} name='address' onChange={this.addressChangedHandler} placeholder='Address' hasError={this.state.isError}/>
+          <Button type={ACCEPT_TYPE} clicked={this.orderHandler} disabled={this.state.isError}>SAVE ORDER</Button>
         </form>
       </StyledContactData>
     );

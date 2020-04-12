@@ -4,7 +4,7 @@ import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import { Redirect } from 'react-router-dom';
 
-import { Input } from '../../components/UI/Input/Input';
+import { CustomInput } from '../../components/UI/Input/CustomInput';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import Button, { ACCEPT_TYPE } from '../../components/UI/Button/Button';
 import rootStoreContext from '../../context/rootStoreContext';
@@ -19,55 +19,36 @@ const StyledAuth = styled.div`
   box-sizing: border-box;
 
   @media ( min-width: 600px ) {
-    width: 500px;
+    width: 700px;
   }
 `;
 
 @observer
-class Auth extends React.Component {
+class Login extends React.Component {
   static contextType = rootStoreContext;
   context!: React.ContextType<typeof rootStoreContext>;
 
-  @observable email: string = '';
+  @observable username: string = '';
   @observable password: string = '';
-  @observable isSignUp: boolean = true;
 
-  @action authHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+  @action loginHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-
-    if (this.isSignUp) {
-      this.context.authStore.register(this.email, this.password);
-    }
-    else {
-      this.context.authStore.login(this.email, this.password);
-    }
+    this.context.authStore.login(this.username, this.password);
   }
 
   @action
   handleEmailInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.persist();
-    this.email = event.target.value;
+    this.username = event.target.value;
   }
 
   @action
   handlePasswordInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.persist()
     this.password = event.target.value;
-  }
-
-  @action
-  switchAuthModeHandler = () => {
-    this.isSignUp = !this.isSignUp;
   }
 
   @computed
   get isSubmitDisabled () {
-    return !(this.email && this.password);
-  }
-
-  @computed
-  get formLabel () {
-    return this.isSignUp ? 'SIGN IN' : 'SIGN UP';
+    return !(this.username && this.password);
   }
 
   render () {
@@ -83,14 +64,14 @@ class Auth extends React.Component {
       <StyledAuth>
         <form>
           {this.context.authStore.error}
-          <Input value={this.email} fieldName='email' onChange={this.handleEmailInput} placeholder='Email'/>
-          <Input value={this.password} fieldName='password' onChange={this.handlePasswordInput} placeholder='Password'/>
-          <Button type={ACCEPT_TYPE} clicked={this.authHandler} disabled={this.isSubmitDisabled}>SUBMIT</Button>
+          <h2>Login</h2>
+          <CustomInput value={this.username} name='username' onChange={this.handleEmailInput} placeholder='Username' minLength={5} maxLength={10}/>
+          <CustomInput value={this.password} name='password' type='password' onChange={this.handlePasswordInput} placeholder='Password'/>
+          <Button type={ACCEPT_TYPE} clicked={this.loginHandler} disabled={this.isSubmitDisabled}>SUBMIT</Button>
         </form>
-      <Button clicked={this.switchAuthModeHandler}>SWITCH TO {this.formLabel}</Button>
       </StyledAuth>
     );
   }
 }
 
-export default Auth;
+export default Login;

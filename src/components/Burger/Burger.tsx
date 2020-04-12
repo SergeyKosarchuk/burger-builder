@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 import { BREAD_BOTTOM, BREAD_TOP } from '../../consts/ingredients';
 import { IBurgerProps } from './types';
+import { observer } from 'mobx-react';
 
-const Burger = styled.div`
+const StyledBurger = styled.div`
   width: 100%;
   margin: auto;
   height: 250px;
@@ -31,14 +32,24 @@ const Burger = styled.div`
 const BreadTop = <BurgerIngredient type={BREAD_TOP} key={BREAD_TOP}/>;
 const BreadBottom = <BurgerIngredient type={BREAD_BOTTOM} key={BREAD_BOTTOM}/>;
 
-export default function burger({ingredients}: IBurgerProps) {
-  let selected_ingredients = [<p key='NO INGREDIENTS'>Add ingredients</p>];
+@observer
+export default class Burger extends React.Component<IBurgerProps> {
+  render () {
+    const { ingredients } = this.props;
 
-  if (ingredients.length) {
-    selected_ingredients = ingredients.map(
-      (ingredient, index) => <BurgerIngredient type={ingredient} key={ingredient + index}/>);
+    if (!ingredients.length) {
+      return (
+        <StyledBurger>
+          {[BreadTop, <p key='Cooking...'>Add ingredients</p>, BreadBottom]}
+        </StyledBurger>
+      );
+    }
+
+    const selected_ingredients = ingredients.map((ingredient, idx) => {
+      return <BurgerIngredient type={ingredient.name} key={idx}></BurgerIngredient>
+    })
+
+    const burger_ingredients = [BreadTop, ...selected_ingredients, BreadBottom];
+    return <StyledBurger>{burger_ingredients}</StyledBurger>
   }
-
-  const burger_ingredients = [BreadTop, ...selected_ingredients, BreadBottom];
-  return <Burger>{burger_ingredients}</Burger>
 }

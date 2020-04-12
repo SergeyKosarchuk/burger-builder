@@ -1,11 +1,10 @@
-import Ingredient from "../../../types/ingredient";
+import Ingredient from "../../../types/customingredient";
 
 export interface IBuildControlsProps {
   price: string,
   isAuthenticated: boolean,
-  ingredientsSelected: boolean,
-  disabled: Ingredient[],
+  ingredients: Ingredient[],
   orderCompleteHandler(): void,
-  ingredientAdded(ingredient: string): void,
-  ingredientRemoved(ingredient: string): void,
+  ingredientAdded(ingredient: Ingredient): void,
+  ingredientRemoved(ingredient: Ingredient): void,
 }

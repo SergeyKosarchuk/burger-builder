@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Burger from '../../Burger/Burger'
 import Button, { ACCEPT_TYPE } from '../../UI/Button/Button'
-import Ingredient from '../../../types/ingredient';
+import Ingredient from '../../../types/customingredient';
 
 const StyledSummary = styled.div`
   text-align: center;

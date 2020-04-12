@@ -1,17 +1,13 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 
-import axios from '../../axios-orders';
+import api from '../../api';
 import Order from '../../components/Order/Order';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../withErrorHandler/withErrorHandler';
 import rootStoreContext from '../../context/rootStoreContext';
-import {
-  NOT_UPLOADED,
-  LOADING,
-  ERROR
-} from '../../store/OrdersStore/consts';
 import IOrder from '../../types/order';
+import { NOT_UPLOADED } from '../../consts/states';
 
 @observer
 class Orders extends React.Component<{}, {}> {
@@ -25,18 +21,16 @@ class Orders extends React.Component<{}, {}> {
   }
 
   render () {
-    if (this.context.ordersStore.state === LOADING) {
+    if (this.context.ordersStore.isLoading) {
       return <Spinner />
     }
 
-    if (this.context.ordersStore.state === ERROR) {
+    if (this.context.ordersStore.isError) {
       return <p>{this.context.ordersStore.error}</p>
     }
 
     const orders = this.context.ordersStore.orders.map((order: IOrder) => (
-      <Order key={order.id}
-           totalPrice={order.totalPrice}
-           ingredients={order.ingredients}/>
+      <Order key={order._id} order={order}/>
     ));
 
     return (
@@ -45,4 +39,4 @@ class Orders extends React.Component<{}, {}> {
   }
 }
 
-export default (withErrorHandler(Orders, axios));
+export default (withErrorHandler(Orders, api));

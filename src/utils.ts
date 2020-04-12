@@ -1,3 +1,3 @@
-export function count(item: string, array: string[]) {
-  return array.filter(arrayItem => arrayItem === item).length
+export function count(items: any[], key:(item: any) => any, item: any,) {
+  return items.filter(arrayItem => key(arrayItem) === key(item)).length
 }
